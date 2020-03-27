@@ -5,26 +5,6 @@ import java.util.Stack;
 
 public class Parser
 {
-	// Declaración de clase ::= <Modificador> "class" identificador "{" <declaración
-	// de campo> <Enunciado> "}"
-	// Delcaración de campo ::= declaración de variable ";"
-	// Declaración de variable ::= <Modificador> (tipo (declarador|identificador))
-	// Declarador ::= identificador "=" entero literal | booleano literal
-	// Expresión ::= expresión de prueba
-	// Expresión de prueba ::= (entero literal | identificador (operador) entero
-	// literal | identificador
-	// Enunciado ::= Declaración de variable | if | while
-	// While ::= "while" "(" expresión ")" "{" <Enunciado> "}"
-	// If ::= "if" "(" expresión ")" "{" expresión aritmetica <Enunciado> "}"
-	// Tipo ::= especificador
-	// Especificador ::= boolean | int
-	// Modificador ::= public | private
-	// Entero Literal ::= (("1..9" < "0..9" > )
-	// Booleano literal ::= true | false
-	// Identificador ::= "a..z""1..9"
-	// Expresión Aritmética ::= Identificador "=" (entero literal (operador) entero
-	// literal ";")
-
 	ArrayList<String> componentes;
 
 	String componente, auxDer, auxIzq;
