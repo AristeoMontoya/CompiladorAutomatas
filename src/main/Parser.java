@@ -3,54 +3,42 @@ package main;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class Parser
-{
+public class Parser {
 	ArrayList<String> componentes;
-
 	String componente, auxDer, auxIzq;
-
 	String salida = "";
 	public static String salida2 = "";
 	private int idx = 0;
 	public Stack<Integer> pila;
 	boolean error;
 
-	public Parser()
-	{
+	public Parser() {
 		componentes = new ArrayList<String>();
 
 	}
 
-	private void Acomodar(Gramatica token, String s)
-	{
+	private void Acomodar(Gramatica token, String s) {
 
-		if (getTipo(componente) == token && componente.equals(s))
-		{
+		if (getTipo(componente) == token && componente.equals(s)) {
 			Avanza();
-		} else
-		{
+		} else {
 			error(getTipo(componente), s);
 		}
 	}
 
-	private void Avanza()
-	{
-		if (idx < componentes.size() - 1)
-		{
+	private void Avanza() {
+		if (idx < componentes.size() - 1) {
 			idx++;
 		}
-		try
-		{
+		try {
 			componente = componentes.get(idx);
 
-		} catch (IndexOutOfBoundsException e)
-		{
+		} catch (IndexOutOfBoundsException e) {
 			idx--;
 		}
 	}
 
-	private void aritmetic_expression()
-	{
+	private void aritmetic_expression() {
 
 		String c;
 		c = componente;
@@ -58,31 +46,24 @@ public class Parser
 		identificador();
 
 		Acomodar(Gramatica.Simbolos_especiales, "=");
-		if (getTipo(componente) == Gramatica.Entero_literal)
-		{
+		if (getTipo(componente) == Gramatica.Entero_literal) {
 			integer_literal();
-		} else if (getTipo(componente) == Gramatica.Identificador)
-		{
+		} else if (getTipo(componente) == Gramatica.Identificador) {
 			identificador();
 		}
 
 		c = componente;
-		while (!c.equals(";"))
-		{
-			if (getTipo(c) == Gramatica.Operadores_aritmeticos)
-			{
+		while (!c.equals(";")) {
+			if (getTipo(c) == Gramatica.Operadores_aritmeticos) {
 				Avanza();
-			} else
-			{
+			} else {
 				error(Gramatica.Operadores_aritmeticos, "arit");
 				break;
 			}
 
-			if (getTipo(componente) == Gramatica.Entero_literal)
-			{
+			if (getTipo(componente) == Gramatica.Entero_literal) {
 				integer_literal();
-			} else if (getTipo(componente) == Gramatica.Identificador)
-			{
+			} else if (getTipo(componente) == Gramatica.Identificador) {
 				identificador();
 			}
 			c = componente;
@@ -91,16 +72,13 @@ public class Parser
 		Acomodar(Gramatica.Simbolos_especiales, ";");
 	}
 
-	private void boolean_literal()
-	{
+	private void boolean_literal() {
 		Avanza();
 	}
 
-	private void declaracion_Clase()
-	{
+	private void declaracion_Clase() {
 		String c = componente;
-		if (!c.equals("class"))
-		{
+		if (!c.equals("class")) {
 			modificador();
 		}
 		c = componente;
@@ -120,15 +98,12 @@ public class Parser
 		Acomodar(Gramatica.Simbolos_especiales, "}");
 	}
 
-	private void expression()
-	{
+	private void expression() {
 		testing_expression();
 	}
 
-	private void error(Gramatica t, String to)
-	{
-		switch (t)
-		{
+	private void error(Gramatica t, String to) {
+		switch (t) {
 			case Simbolos_especiales:
 				salida += "Error Sintactico, se esperaba un \"" + to;
 				break;
@@ -167,24 +142,20 @@ public class Parser
 
 	}
 
-	private void field_Declaration()
-	{
+	private void field_Declaration() {
 		String c = componente;
-		if (getTipo(c) == Gramatica.Modificador || getTipo(c) == Gramatica.Especificador)
-		{
+		if (getTipo(c) == Gramatica.Modificador || getTipo(c) == Gramatica.Especificador) {
 			variable_declaration();
 			c = componente;
 			Acomodar(Gramatica.Simbolos_especiales, ";");
 		}
 	}
 
-	public String getSalida()
-	{
+	public String getSalida() {
 		return salida;
 	}
 
-	private void if_Statement()
-	{
+	private void if_Statement() {
 		Acomodar(Gramatica.Simbolos_especiales, "(");
 		expression();
 		Acomodar(Gramatica.Simbolos_especiales, ")");
@@ -196,168 +167,132 @@ public class Parser
 		statement();
 	}
 
-	private void integer_literal()
-	{
+	private void integer_literal() {
 		Acomodar(Gramatica.Entero_literal, componente);
 	}
 
-	private void identificador()
-	{
+	private void identificador() {
 		Acomodar(Gramatica.Identificador, componente);
 
 	}
 
-	private void modificador()
-	{
-		if (getTipo(componente) == Gramatica.Modificador)
-		{
+	private void modificador() {
+		if (getTipo(componente) == Gramatica.Modificador) {
 			Avanza();
-		} else
-		{
+		} else {
 			error(Gramatica.Identificador, "");
 		}
 	}
 
-	public String motorSintactico(ArrayList<String> listaTokens)
-	{
+	public String motorSintactico(ArrayList<String> listaTokens) {
 
 		salida = "";
 		idx = 0;
 		componentes = listaTokens;
-		try
-		{
+		try {
 			componente = componentes.get(0);
-		} catch (IndexOutOfBoundsException e)
-		{
+		} catch (IndexOutOfBoundsException e) {
 
 		}
 		declaracion_Clase();
-		if (salida.equals(""))
-		{
+		if (salida.equals("")) {
 			salida = "No hay errores sintacticos";
 			return salida;
-		} else
-		{
+		} else {
 			return salida;
 		}
 
 	}
 
-	private void statement()
-	{
+	private void statement() {
 		String c = componente;
-		if (getTipo(c) == Gramatica.If)
-		{
+		if (getTipo(c) == Gramatica.If) {
 			Avanza();
 			if_Statement();
-			
-		} else if (getTipo(c) == Gramatica.While)
-		{
+
+		} else if (getTipo(c) == Gramatica.While) {
 			Avanza();
 			while_Statement();
-		} else if (getTipo(c) == Gramatica.Modificador || getTipo(c) == Gramatica.Especificador)
-		{
+		} else if (getTipo(c) == Gramatica.Modificador || getTipo(c) == Gramatica.Especificador) {
 			variable_declaration();
 			Acomodar(Gramatica.Simbolos_especiales, ";");
-		}
-		else
+		} else
 			error(getTipo(c), "If while, o declaración de variable");
 	}
 
-	private void testing_expression()
-	{
+	private void testing_expression() {
 		Gramatica t = getTipo(componente);
-		if (t == Gramatica.Identificador)
-		{
+		if (t == Gramatica.Identificador) {
 			identificador();
-		} else if (t == Gramatica.Entero_literal)
-		{
+		} else if (t == Gramatica.Entero_literal) {
 			integer_literal();
 		} else
 			error(t, componente);
 
 		t = getTipo(componente);
 
-		if (t == Gramatica.Simbolos_de_evaluacion)
-		{
+		if (t == Gramatica.Simbolos_de_evaluacion) {
 			Avanza();
-		} else
-		{
+		} else {
 			error(t, componente);
 		}
 
 		t = getTipo(componente);
 
-		if (t == Gramatica.Entero_literal)
-		{
+		if (t == Gramatica.Entero_literal) {
 			integer_literal();
-		}
-		else if(t == Gramatica.Identificador)
-		{
+		} else if (t == Gramatica.Identificador) {
 			identificador();
-		} 
-		else
+		} else
 			error(t, componente);
 	}
 
-	private void type()
-	{
+	private void type() {
 		type_specifier();
 	}
 
-	private void type_specifier()
-	{
+	private void type_specifier() {
 		String c = null;
 		c = componente;
-		if (getTipo(c) == Gramatica.Especificador)
-		{
+		if (getTipo(c) == Gramatica.Especificador) {
 			Avanza();
-		} else
-		{
+		} else {
 			error(getTipo(c), Gramatica.Especificador.toString());
 		}
 	}
 
-	private void variable_declaration()
-	{
+	private void variable_declaration() {
 
 		String c = componente;
 
-		if (getTipo(c) == Gramatica.Modificador)
-		{
+		if (getTipo(c) == Gramatica.Modificador) {
 			modificador();
 		}
 		type();
 		identificador();
 
 		c = componente;
-		if (c.equals("="))
-		{
+		if (c.equals("=")) {
 			Avanza();
 			variable_declarator();
 		}
 
 	}
 
-	private void variable_declarator()
-	{
+	private void variable_declarator() {
 		String c;
 		c = componente;
 
-		if (getTipo(c) == Gramatica.Entero_literal)
-		{
+		if (getTipo(c) == Gramatica.Entero_literal) {
 			integer_literal();
-		} else if (getTipo(c) == Gramatica.Booleano_literal)
-		{
+		} else if (getTipo(c) == Gramatica.Booleano_literal) {
 			boolean_literal();
-		} else
-		{
+		} else {
 			error(getTipo(componente), "");
 		}
 	}
 
-	private void while_Statement()
-	{
+	private void while_Statement() {
 
 		Acomodar(Gramatica.Simbolos_especiales, "(");
 		expression();
@@ -367,14 +302,11 @@ public class Parser
 		Acomodar(Gramatica.Simbolos_especiales, "}");
 	}
 
-	private Gramatica getTipo(String s)
-	{
+	private Gramatica getTipo(String s) {
 		int x;
-		for (Gramatica t : Gramatica.values())
-		{
+		for (Gramatica t : Gramatica.values()) {
 			x = t.final_coincidencias(s);
-			if (x != -1)
-			{
+			if (x != -1) {
 				return t;
 			}
 		}

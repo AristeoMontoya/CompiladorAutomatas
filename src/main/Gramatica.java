@@ -2,7 +2,7 @@ package main;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-//Correo elizabethniebla@hotmail.com
+
 public enum Gramatica
 {
 	Declaracion_clase("(class)"), 

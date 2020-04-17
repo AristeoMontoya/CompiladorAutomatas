@@ -1,29 +1,16 @@
 package main;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JToolBar;
-import javax.swing.UIManager;
-import javax.swing.table.DefaultTableModel;
 
-public class Ventana extends JFrame
-{
+public class Ventana extends JFrame {
 	private static final long serialVersionUID = -3760618021421768380L;
 
 	private JPanel panel_sur;
@@ -44,22 +31,17 @@ public class Ventana extends JFrame
 
 	private boolean banderaIconos = true;
 
-	public Ventana()
-	{
-		try
-		{
+	public Ventana() {
+		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 		}
 		setTitle("Compilador");
 		setSize(800, 600);
-		try
-		{
+		try {
 			setIconImage(cargarIcono("/recursos/icono_codigo.png"));
-		} catch (NullPointerException e)
-		{
-			JOptionPane.showMessageDialog(this, "El programa se ejecutará sin íconos", "Error al cargar íconos", JOptionPane.DEFAULT_OPTION);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "El programa se ejecutará sin íconos", "Error al cargar íconos", JOptionPane.PLAIN_MESSAGE);
 			banderaIconos = false;
 		}
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -68,8 +50,7 @@ public class Ventana extends JFrame
 		inicializar();
 	}
 
-	private void inicializar()
-	{
+	private void inicializar() {
 		jta_texto = new JTextArea();
 		jta_texto.setTabSize(2);
 		scroll_editor = new JScrollPane(jta_texto);
@@ -86,7 +67,7 @@ public class Ventana extends JFrame
 		scroll_consola = new JScrollPane(jta_consola);
 		jtb_panel_consola.add(scroll_consola, "Consola");
 
-		encabezado = new String[] { "Nombre", "Tipo de dato", "Dato que contiene" };
+		encabezado = new String[]{"Nombre", "Tipo de dato", "Dato que contiene"};
 		modelo_tabla = new DefaultTableModel();
 		modelo_tabla.setColumnIdentifiers(encabezado);
 		tabla_identificadores = new JTable(modelo_tabla);
@@ -99,10 +80,9 @@ public class Ventana extends JFrame
 		barra_tareas.setFloatable(false);
 
 		btn_iniciar = new JButton("Iniciar proceso");
-		btn_iniciar.addActionListener(e -> resultado_analisis());
+		btn_iniciar.addActionListener(e -> iniciarProceso());
 
-		if (banderaIconos)
-		{
+		if (banderaIconos) {
 			jtb_panel_consola.setIconAt(0, new ImageIcon(this.getClass().getResource("/recursos/icono_consola.png")));
 			jtb_panel_consola.setIconAt(1, new ImageIcon(this.getClass().getResource("/recursos/icono_lista.png")));
 			btn_iniciar.setIcon(new ImageIcon(this.getClass().getResource("/recursos/icono_compilar.png")));
@@ -113,72 +93,71 @@ public class Ventana extends JFrame
 
 	}
 
-	private void resultado_analisis()
-	{
-		lexer = new Lexer();
-		jta_consola.setText("");
-		identificadores = new LinkedList<String>();
-		listaLexemas = new ArrayList<String>();
-		lexer.analizar(jta_texto.getText().split("\n"));
-
-		while (!lexer.concluido())
-		{
-			Gramatica token = lexer.token_actual();
-			String lexema = lexer.lexema_actual();
-
-			if (token == Gramatica.Identificador && !identificadores.contains(lexema))
-			{
-				identificadores.add(lexema);
-			}
-			listaLexemas.add(lexema);
-			jta_consola.append(lexema + "\t" + token + "\n");
-			lexer.continuar();
-		}
-
-		Parser p = new Parser();
-		if (lexer.analisis_exitoso())
-		{
-			jta_consola.append("\n----::RESULTADO DE ANÁLISIS LÉXICO::----\n");
-			jta_consola.append("Análisis léxico finalizado con éxito.");
-		} else
-		{
-			jta_consola.append(lexer.mensaje_error());
-		}
-		jta_consola.append("\n--::RESULTADO DE ANÁLISIS SINTÁCTICO::--\n");
-		p.motorSintactico(listaLexemas);
-		jta_consola.append(p.salida + "\n");
-		llenarTabla(identificadores);
+	private void iniciarProceso() {
+		Controlador compilador = new Controlador(jta_texto.getText());
+		compilador.iniciar();
+		resultadoAnalisis(compilador);
 	}
 
-	private void llenarTabla(LinkedList<String> nombres)
-	{
+	private void resultadoAnalisis(Controlador compilador) {
+		if(compilador.encontroErrores()){
+			jta_consola.setText(compilador.getErrores());
+		}
+		else{
+			jta_consola.setText("Proceso finalizado con éxito. No se encontraron errores");
+		}
+//		lexer = new Lexer();
+//		jta_consola.setText("");
+//		identificadores = new LinkedList<String>();
+//		listaLexemas = new ArrayList<String>();
+//		lexer.analizar(jta_texto.getText().split("\n"));
+//
+//		while (!lexer.concluido()) {
+//			Gramatica token = lexer.token_actual();
+//			String lexema = lexer.lexema_actual();
+//
+//			if (token == Gramatica.Identificador && !identificadores.contains(lexema)) {
+//				identificadores.add(lexema);
+//			}
+//			listaLexemas.add(lexema);
+//			jta_consola.append(lexema + "\t" + token + "\n");
+//			lexer.continuar();
+//		}
+//
+//		Parser p = new Parser();
+//		if (lexer.analisis_exitoso()) {
+//			jta_consola.append("\n----::RESULTADO DE ANÁLISIS LÉXICO::----\n");
+//			jta_consola.append("Análisis léxico finalizado con éxito.");
+//		} else {
+//			jta_consola.append(lexer.mensaje_error());
+//		}
+//		jta_consola.append("\n--::RESULTADO DE ANÁLISIS SINTÁCTICO::--\n");
+//		p.motorSintactico(listaLexemas);
+//		jta_consola.append(p.salida + "\n");
+//		llenarTabla(identificadores);
+	}
+
+	private void llenarTabla(LinkedList<String> nombres) {
 		borrarTabla(tabla_identificadores.getRowCount() - 1);
-		for (int i = 0; i < nombres.size(); i++)
-		{
-			String renglon[] = new String[] { nombres.get(i), "", "" };
+		for (String nombre : nombres) {
+			String[] renglon = new String[]{nombre, "", ""};
 			modelo_tabla.addRow(renglon);
 		}
 	}
 
-	private void borrarTabla(int i)
-	{
-		if (i >= 0)
-		{
+	private void borrarTabla(int i) {
+		if (i >= 0) {
 			modelo_tabla.removeRow(i);
 			borrarTabla(i - 1);
 		}
 	}
 
-	private BufferedImage cargarIcono(String ruta)
-	{
-		try
-		{
+	private BufferedImage cargarIcono(String ruta) {
+		try {
 			InputStream imageInputStream = this.getClass().getResourceAsStream(ruta);
-			BufferedImage bufferedImage = ImageIO.read(imageInputStream);
-			return bufferedImage;
+			return ImageIO.read(imageInputStream);
 
-		} catch (IOException exception)
-		{
+		} catch (IOException exception) {
 			exception.printStackTrace();
 			return null;
 		}
