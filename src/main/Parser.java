@@ -1,53 +1,47 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class Parser {
-	ArrayList<String> componentes;
-	String componente, auxDer, auxIzq;
-	String salida = "";
 	public static String salida2 = "";
-	private int idx = 0;
-	public Stack<Integer> pila;
-	boolean error;
+	private ArrayList<String> tokens;
+	private String componente;
+	private String salida = "";
+	private int indice = 0;
 
-	public Parser() {
-		componentes = new ArrayList<String>();
-
+	public Parser() {	//TODO: Arreglar todo esto.
+		tokens = new ArrayList<>();
 	}
 
-	private void Acomodar(Gramatica token, String s) {
-
+	private void acomodar(Gramatica token, String s) {
 		if (getTipo(componente) == token && componente.equals(s)) {
-			Avanza();
+			avanza();
 		} else {
 			error(getTipo(componente), s);
 		}
 	}
 
-	private void Avanza() {
-		if (idx < componentes.size() - 1) {
-			idx++;
+	private void avanza() {
+		if (indice < tokens.size() - 1) {
+			indice++;
 		}
 		try {
-			componente = componentes.get(idx);
+			componente = tokens.get(indice);
 
 		} catch (IndexOutOfBoundsException e) {
-			idx--;
+			indice--;
 		}
 	}
 
-	private void aritmetic_expression() {
+	private void expresionAritmetica() {
 
 		String c;
-		c = componente;
 
 		identificador();
 
-		Acomodar(Gramatica.Simbolos_especiales, "=");
+		acomodar(Gramatica.Simbolos_especiales, "=");
 		if (getTipo(componente) == Gramatica.Entero_literal) {
-			integer_literal();
+			integerLiteral();
 		} else if (getTipo(componente) == Gramatica.Identificador) {
 			identificador();
 		}
@@ -55,51 +49,45 @@ public class Parser {
 		c = componente;
 		while (!c.equals(";")) {
 			if (getTipo(c) == Gramatica.Operadores_aritmeticos) {
-				Avanza();
+				avanza();
 			} else {
 				error(Gramatica.Operadores_aritmeticos, "arit");
 				break;
 			}
 
 			if (getTipo(componente) == Gramatica.Entero_literal) {
-				integer_literal();
+				integerLiteral();
 			} else if (getTipo(componente) == Gramatica.Identificador) {
 				identificador();
 			}
 			c = componente;
 		}
 
-		Acomodar(Gramatica.Simbolos_especiales, ";");
+		acomodar(Gramatica.Simbolos_especiales, ";");
 	}
 
-	private void boolean_literal() {
-		Avanza();
+	private void booleanLiteral() {
+		avanza();
 	}
 
-	private void declaracion_Clase() {
-		String c = componente;
-		if (!c.equals("class")) {
+	private void declaracionClase() {
+		if (!componente.equals("class")) {
 			modificador();
 		}
-		c = componente;
 
-		Acomodar(Gramatica.Declaracion_clase, "class");
-
-		c = componente;
+		acomodar(Gramatica.Declaracion_clase, "class");
 
 		identificador();
-		c = componente;
-		Acomodar(Gramatica.Simbolos_especiales, "{");
 
-		c = componente;
+		acomodar(Gramatica.Simbolos_especiales, "{");
 
-		field_Declaration();
+		fieldDeclaration();
 		statement();
-		Acomodar(Gramatica.Simbolos_especiales, "}");
+		acomodar(Gramatica.Simbolos_especiales, "}");
 	}
 
 	private void expression() {
-		testing_expression();
+		testingExpression();
 	}
 
 	private void error(Gramatica t, String to) {
@@ -142,12 +130,10 @@ public class Parser {
 
 	}
 
-	private void field_Declaration() {
-		String c = componente;
-		if (getTipo(c) == Gramatica.Modificador || getTipo(c) == Gramatica.Especificador) {
-			variable_declaration();
-			c = componente;
-			Acomodar(Gramatica.Simbolos_especiales, ";");
+	private void fieldDeclaration() {
+		if (getTipo(componente) == Gramatica.Modificador || getTipo(componente) == Gramatica.Especificador) {
+			variableDeclaration();
+			acomodar(Gramatica.Simbolos_especiales, ";");
 		}
 	}
 
@@ -155,30 +141,30 @@ public class Parser {
 		return salida;
 	}
 
-	private void if_Statement() {
-		Acomodar(Gramatica.Simbolos_especiales, "(");
+	private void ifStatement() {
+		acomodar(Gramatica.Simbolos_especiales, "(");
 		expression();
-		Acomodar(Gramatica.Simbolos_especiales, ")");
-		Acomodar(Gramatica.Simbolos_especiales, "{");
-		aritmetic_expression();
+		acomodar(Gramatica.Simbolos_especiales, ")");
+		acomodar(Gramatica.Simbolos_especiales, "{");
+		expresionAritmetica();
 
-		Acomodar(Gramatica.Simbolos_especiales, "}");
+		acomodar(Gramatica.Simbolos_especiales, "}");
 
 		statement();
 	}
 
-	private void integer_literal() {
-		Acomodar(Gramatica.Entero_literal, componente);
+	private void integerLiteral() {
+		acomodar(Gramatica.Entero_literal, componente);
 	}
 
 	private void identificador() {
-		Acomodar(Gramatica.Identificador, componente);
+		acomodar(Gramatica.Identificador, componente);
 
 	}
 
 	private void modificador() {
 		if (getTipo(componente) == Gramatica.Modificador) {
-			Avanza();
+			avanza();
 		} else {
 			error(Gramatica.Identificador, "");
 		}
@@ -187,52 +173,49 @@ public class Parser {
 	public String motorSintactico(ArrayList<String> listaTokens) {
 
 		salida = "";
-		idx = 0;
-		componentes = listaTokens;
+		indice = 0;
+		tokens = listaTokens;
 		try {
-			componente = componentes.get(0);
+			componente = tokens.get(0);
 		} catch (IndexOutOfBoundsException e) {
-
+			salida = "Código vacío.";
 		}
-		declaracion_Clase();
+		declaracionClase();
 		if (salida.equals("")) {
 			salida = "No hay errores sintacticos";
-			return salida;
-		} else {
-			return salida;
 		}
-
+		return salida;
 	}
 
 	private void statement() {
 		String c = componente;
 		if (getTipo(c) == Gramatica.If) {
-			Avanza();
-			if_Statement();
+			avanza();
+			ifStatement();
 
 		} else if (getTipo(c) == Gramatica.While) {
-			Avanza();
-			while_Statement();
+			avanza();
+			whileStatement();
 		} else if (getTipo(c) == Gramatica.Modificador || getTipo(c) == Gramatica.Especificador) {
-			variable_declaration();
-			Acomodar(Gramatica.Simbolos_especiales, ";");
+			variableDeclaration();
+			acomodar(Gramatica.Simbolos_especiales, ";");
 		} else
 			error(getTipo(c), "If while, o declaración de variable");
 	}
 
-	private void testing_expression() {
+	private void testingExpression() {
 		Gramatica t = getTipo(componente);
 		if (t == Gramatica.Identificador) {
 			identificador();
 		} else if (t == Gramatica.Entero_literal) {
-			integer_literal();
+			integerLiteral();
 		} else
 			error(t, componente);
 
 		t = getTipo(componente);
 
 		if (t == Gramatica.Simbolos_de_evaluacion) {
-			Avanza();
+			avanza();
 		} else {
 			error(t, componente);
 		}
@@ -240,7 +223,7 @@ public class Parser {
 		t = getTipo(componente);
 
 		if (t == Gramatica.Entero_literal) {
-			integer_literal();
+			integerLiteral();
 		} else if (t == Gramatica.Identificador) {
 			identificador();
 		} else
@@ -248,20 +231,18 @@ public class Parser {
 	}
 
 	private void type() {
-		type_specifier();
+		epecificadorTipo();
 	}
 
-	private void type_specifier() {
-		String c = null;
-		c = componente;
-		if (getTipo(c) == Gramatica.Especificador) {
-			Avanza();
+	private void epecificadorTipo() {
+		if (getTipo(componente) == Gramatica.Especificador) {
+			avanza();
 		} else {
-			error(getTipo(c), Gramatica.Especificador.toString());
+			error(getTipo(componente), Gramatica.Especificador.toString());
 		}
 	}
 
-	private void variable_declaration() {
+	private void variableDeclaration() {
 
 		String c = componente;
 
@@ -273,33 +254,33 @@ public class Parser {
 
 		c = componente;
 		if (c.equals("=")) {
-			Avanza();
-			variable_declarator();
+			avanza();
+			variableDeclarator();
 		}
 
 	}
 
-	private void variable_declarator() {
+	private void variableDeclarator() {
 		String c;
 		c = componente;
 
 		if (getTipo(c) == Gramatica.Entero_literal) {
-			integer_literal();
+			integerLiteral();
 		} else if (getTipo(c) == Gramatica.Booleano_literal) {
-			boolean_literal();
+			booleanLiteral();
 		} else {
 			error(getTipo(componente), "");
 		}
 	}
 
-	private void while_Statement() {
+	private void whileStatement() {
 
-		Acomodar(Gramatica.Simbolos_especiales, "(");
+		acomodar(Gramatica.Simbolos_especiales, "(");
 		expression();
-		Acomodar(Gramatica.Simbolos_especiales, ")");
-		Acomodar(Gramatica.Simbolos_especiales, "{");
+		acomodar(Gramatica.Simbolos_especiales, ")");
+		acomodar(Gramatica.Simbolos_especiales, "{");
 		statement();
-		Acomodar(Gramatica.Simbolos_especiales, "}");
+		acomodar(Gramatica.Simbolos_especiales, "}");
 	}
 
 	private Gramatica getTipo(String s) {

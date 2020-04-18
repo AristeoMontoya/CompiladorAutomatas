@@ -100,10 +100,9 @@ public class Ventana extends JFrame {
 	}
 
 	private void resultadoAnalisis(Controlador compilador) {
-		if(compilador.encontroErrores()){
+		if (compilador.encontroErrores()) {
 			jta_consola.setText(compilador.getErrores());
-		}
-		else{
+		} else {
 			jta_consola.setText("Proceso finalizado con éxito. No se encontraron errores");
 		}
 //		lexer = new Lexer();

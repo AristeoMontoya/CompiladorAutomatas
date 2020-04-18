@@ -1,10 +1,12 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Controlador {
 	private String Codigo;
 	private String errores;
+	private ArrayList<String> tokens;
 	private boolean encontroErrores = false;
 
 	public Controlador(String codigo) {
@@ -13,8 +15,9 @@ public class Controlador {
 	}
 
 	public void iniciar() {
-		lexico();
+		lexico();        //TODO: Implementar el llenado de la tabla de símbolos con los identificadores obtenidos
 		sintactico();
+		semantico();    //TODO: Implementar analizador semántico.
 	}
 
 	private void lexico() {
@@ -24,16 +27,18 @@ public class Controlador {
 		if (!analizador.analisis_exitoso()) {
 			encontroErrores = true;
 			errores += analizador.mensaje_error() + "\n";
+		} else {
+			tokens = analizador.getTokens();
 		}
 	}
 
 	private void sintactico() {
-		encontroErrores = true;
-		errores += "Por aquí pasó un caballo con sus patas al revés\n";
+		Parser sintactico = new Parser();
+		sintactico.motorSintactico(tokens);
+		System.out.println("\n" + sintactico.getSalida());
 	}
 
 	private void semantico() {
-
 	}
 
 	private void codigoIntermedio() {
