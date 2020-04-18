@@ -15,27 +15,27 @@ public class Controlador {
 	}
 
 	public void iniciar() {
-		lexico();        //TODO: Implementar el llenado de la tabla de símbolos con los identificadores obtenidos
-		sintactico();
-		semantico();    //TODO: Implementar analizador semántico.
+		lexico();		//TODO: Implementar el llenado de la tabla de símbolos con los identificadores obtenidos
+		sintactico();	//TODO: Rehacer esto. Pero después
+		semantico();	//TODO: Implementar analizador semántico.
 	}
 
 	private void lexico() {
 		Lexer analizador = new Lexer(Codigo);
-		analizador.analizar();
-
-		if (!analizador.analisis_exitoso()) {
+		if (!analizador.analizar()) {
 			encontroErrores = true;
-			errores += analizador.mensaje_error() + "\n";
+			errores += analizador.mensajeError() + "\n";
 		} else {
 			tokens = analizador.getTokens();
 		}
 	}
 
 	private void sintactico() {
-		Parser sintactico = new Parser();
-		sintactico.motorSintactico(tokens);
-		System.out.println("\n" + sintactico.getSalida());
+		Parser sintactico = new Parser(tokens);
+		if(!sintactico.motorSintactico()){
+			encontroErrores = true;
+			errores += sintactico.getSalida() + "\n";
+		}
 	}
 
 	private void semantico() {
@@ -63,5 +63,5 @@ public class Controlador {
 
 	public boolean encontroErrores() {
 		return encontroErrores;
-	}
+}
 }

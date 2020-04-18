@@ -25,7 +25,7 @@ public enum Gramatica
 		patron = Pattern.compile("^" + regex);
 	}
 
-	int final_coincidencias(String s)
+	int finalCoincidencias(String s)
 	{
 		Matcher m = patron.matcher(s);
 

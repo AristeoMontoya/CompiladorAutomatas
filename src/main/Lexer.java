@@ -6,32 +6,32 @@ import java.util.Set;
 
 public class Lexer {
 	private StringBuilder entrada = new StringBuilder();
-	private Gramatica token;
 	private String lexema;
 	private ArrayList<String> tokens;
 	private boolean concluido = false;
 	private String mensaje_error = "";
-	private Set<Character> caracteres_vacios = new HashSet<>();
+	private Set<Character> caracteresVacios = new HashSet<>();
 
 	public Lexer(String codigo) {
-		tokens = new ArrayList<String>();
+		tokens = new ArrayList<>();
 		entrada.append(codigo);
 
-		caracteres_vacios.add('\r');
-		caracteres_vacios.add('\n');
-		caracteres_vacios.add((char) 8);
-		caracteres_vacios.add((char) 9);
-		caracteres_vacios.add((char) 11);
-		caracteres_vacios.add((char) 12);
-		caracteres_vacios.add((char) 32);
+		caracteresVacios.add('\r');
+		caracteresVacios.add('\n');
+		caracteresVacios.add((char) 8);
+		caracteresVacios.add((char) 9);
+		caracteresVacios.add((char) 11);
+		caracteresVacios.add((char) 12);
+		caracteresVacios.add((char) 32);
 	}
 
-	public void analizar() {
+	public boolean analizar() {
 		while(!concluido)
 			continuar();
+		return mensaje_error.isEmpty();
 	}
 
-	public void continuar() {
+	private void continuar() {
 		if (concluido) {
 			return;
 		}
@@ -41,9 +41,9 @@ public class Lexer {
 			return;
 		}
 
-		ignorar_espacios();
+		ignorarEspacios();
 
-		if (siguiente_token()) {
+		if (siguienteToken()) {
 			return;
 		}
 
@@ -54,21 +54,21 @@ public class Lexer {
 		}
 	}
 
-	private void ignorar_espacios() {
-		int caracteres_a_borrar = 0;
+	private void ignorarEspacios() {
+		int caracteresABorrar = 0;
 
-		while (entrada.length() > caracteres_a_borrar && caracteres_vacios.contains(entrada.charAt(caracteres_a_borrar))) {
-			caracteres_a_borrar++;
+		while (entrada.length() > caracteresABorrar && caracteresVacios.contains(entrada.charAt(caracteresABorrar))) {
+			caracteresABorrar++;
 		}
 
-		if (caracteres_a_borrar > 0) {
-			entrada.delete(0, caracteres_a_borrar);
+		if (caracteresABorrar > 0) {
+			entrada.delete(0, caracteresABorrar);
 		}
 	}
 
-	private boolean siguiente_token() {
+	private boolean siguienteToken() {
 		for (Gramatica t : Gramatica.values()) {
-			int fin = t.final_coincidencias(entrada.toString());
+			int fin = t.finalCoincidencias(entrada.toString());
 
 			if (fin != -1) {
 				lexema = entrada.substring(0, fin);
@@ -84,11 +84,7 @@ public class Lexer {
 		return tokens;
 	}
 
-	public boolean analisis_exitoso() {
-		return mensaje_error.isEmpty();
-	}
-
-	public String mensaje_error() {
+	public String mensajeError() {
 		return mensaje_error;
 	}
 }
