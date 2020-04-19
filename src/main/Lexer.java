@@ -6,15 +6,17 @@ import java.util.Set;
 
 public class Lexer {
 	private StringBuilder entrada = new StringBuilder();
-	private String lexema;
-	private ArrayList<String> tokens;
+	private ArrayList<Token> tokens;
 	private boolean concluido = false;
 	private String mensaje_error = "";
 	private Set<Character> caracteresVacios = new HashSet<>();
+	private int lineaActual = 1;
+	private String[] lineasCodigo;
 
 	public Lexer(String codigo) {
+		lineasCodigo = codigo.split("\r\n|\r|\n");
 		tokens = new ArrayList<>();
-		entrada.append(codigo);
+
 
 		caracteresVacios.add('\r');
 		caracteresVacios.add('\n');
@@ -26,8 +28,15 @@ public class Lexer {
 	}
 
 	public boolean analizar() {
-		while(!concluido)
-			continuar();
+		for (String linea : lineasCodigo) {
+			entrada.append(linea);
+			while (!concluido)
+				continuar();
+			if (entrada.length() > 0)
+				entrada.delete(0, entrada.length());
+			lineaActual += 1;
+			concluido = false;
+		}
 		return mensaje_error.isEmpty();
 	}
 
@@ -50,7 +59,7 @@ public class Lexer {
 		concluido = true;
 
 		if (entrada.length() > 0) {
-			mensaje_error = "Simbolo no esperado: '" + entrada.charAt(0) + "'" + " en la línea "/* + obtenerIndice(entrada.charAt(0), 0)*/;
+			mensaje_error += "Simbolo no esperado: '" + entrada.charAt(0) + "'" + " en la línea " + lineaActual + "\n";
 		}
 	}
 
@@ -69,18 +78,17 @@ public class Lexer {
 	private boolean siguienteToken() {
 		for (Gramatica t : Gramatica.values()) {
 			int fin = t.finalCoincidencias(entrada.toString());
-
 			if (fin != -1) {
-				lexema = entrada.substring(0, fin);
+				String lexema = entrada.substring(0, fin);
 				entrada.delete(0, fin);
-				tokens.add(lexema);
+				tokens.add(new Token(lexema, t, lineaActual));
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public ArrayList<String> getTokens() {
+	public ArrayList<Token> getTokens() {
 		return tokens;
 	}
 

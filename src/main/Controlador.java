@@ -6,7 +6,7 @@ import java.util.Hashtable;
 public class Controlador {
 	private String Codigo;
 	private String errores;
-	private ArrayList<String> tokens;
+	private ArrayList<Token> tokens;
 	private boolean encontroErrores = false;
 
 	public Controlador(String codigo) {
@@ -15,9 +15,9 @@ public class Controlador {
 	}
 
 	public void iniciar() {
-		lexico();		//TODO: Implementar el llenado de la tabla de símbolos con los identificadores obtenidos
-		sintactico();	//TODO: Rehacer esto. Pero después
-		semantico();	//TODO: Implementar analizador semántico.
+		lexico();            //TODO: Implementar el llenado de la tabla de símbolos con los identificadores obtenidos
+		sintactico();        //TODO: Rehacer esto. Pero después
+		semantico();         //TODO: Implementar analizador semántico.
 	}
 
 	private void lexico() {
@@ -32,13 +32,20 @@ public class Controlador {
 
 	private void sintactico() {
 		Parser sintactico = new Parser(tokens);
-		if(!sintactico.motorSintactico()){
+		if (!sintactico.motorSintactico()) {
 			encontroErrores = true;
 			errores += sintactico.getSalida() + "\n";
+		} else {
+			tokens = sintactico.getListaTokens();
+		}
+		for (Token aux : tokens) {
+			System.out.println("Simbolo: " + aux.getSimbolo() + "\tValor: " + aux.getValor() + "\tTipo de dato: " + aux.getTipoDato() + "\tPosicion: " + aux.getLinea());
 		}
 	}
 
 	private void semantico() {
+		Semantico analizador = new Semantico();
+		analizador.comenzarAnalisis();
 	}
 
 	private void codigoIntermedio() {
@@ -63,5 +70,5 @@ public class Controlador {
 
 	public boolean encontroErrores() {
 		return encontroErrores;
-}
+	}
 }
