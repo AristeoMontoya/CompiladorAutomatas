@@ -44,7 +44,7 @@ public class Controlador {
 	}
 
 	private void semantico() {
-		Semantico analizador = new Semantico();
+		Semantico analizador = new Semantico(tokens);
 		analizador.comenzarAnalisis();
 	}
 

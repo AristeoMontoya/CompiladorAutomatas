@@ -105,35 +105,6 @@ public class Ventana extends JFrame {
 		} else {
 			jta_consola.setText("Proceso finalizado con éxito. No se encontraron errores");
 		}
-//		lexer = new Lexer();
-//		jta_consola.setText("");
-//		identificadores = new LinkedList<String>();
-//		listaLexemas = new ArrayList<String>();
-//		lexer.analizar(jta_texto.getText().split("\n"));
-//
-//		while (!lexer.concluido()) {
-//			Gramatica token = lexer.token_actual();
-//			String lexema = lexer.lexema_actual();
-//
-//			if (token == Gramatica.Identificador && !identificadores.contains(lexema)) {
-//				identificadores.add(lexema);
-//			}
-//			listaLexemas.add(lexema);
-//			jta_consola.append(lexema + "\t" + token + "\n");
-//			lexer.continuar();
-//		}
-//
-//		Parser p = new Parser();
-//		if (lexer.analisis_exitoso()) {
-//			jta_consola.append("\n----::RESULTADO DE ANÁLISIS LÉXICO::----\n");
-//			jta_consola.append("Análisis léxico finalizado con éxito.");
-//		} else {
-//			jta_consola.append(lexer.mensaje_error());
-//		}
-//		jta_consola.append("\n--::RESULTADO DE ANÁLISIS SINTÁCTICO::--\n");
-//		p.motorSintactico(listaLexemas);
-//		jta_consola.append(p.salida + "\n");
-//		llenarTabla(identificadores);
 	}
 
 	private void llenarTabla(LinkedList<String> nombres) {

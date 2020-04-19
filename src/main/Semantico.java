@@ -1,6 +1,12 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Semantico {
+	HashMap<String, Token> tabla = new HashMap<>();
+	private ArrayList<Token> listaTokens;
+
 	/*	TODO:
 	 *	-Crear tabla de símbolos
 	 *		Mostrar la tabla de símbolos con las variables declaradas dentro de una clase/método/función
@@ -33,8 +39,20 @@ public class Semantico {
 	 *		de tipos de datos usados, mostrar un mensaje con la posición de la
 	 *		expresión
 	 */
-	public void comenzarAnalisis() {
+	public Semantico(ArrayList<Token> listaTokens) {
+		this.listaTokens = extraerIdentificadores(listaTokens);
+	}
 
+	private ArrayList<Token> extraerIdentificadores(ArrayList<Token> listaTokens) {
+		ArrayList<Token> aux = new ArrayList<>();
+		for (Token t : listaTokens) {
+			if (t.getTipoToken() == Gramatica.Identificador)
+				aux.add(t);
+		}
+		return aux;
+	}
+
+	public void comenzarAnalisis() {
 	}
 
 	private void validarOperacion() {
