@@ -69,7 +69,7 @@ public class Controlador {
 			registro[1] = t.getValor();
 			registro[2] = t.getTipoDato();
 			registro[3] = "" + t.getLinea();
-			registro[4] = "";
+			registro[4] = t.getAlcance();
 			tabla.add(registro);
 		}
 	}

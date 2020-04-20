@@ -8,7 +8,7 @@ public class Semantico {
 	private ArrayList<Token> listaTokens;
 	private String errores;
 	private int indice = 0;
-	private int id = 1;
+	private int bloque = 0;
 
 	/*	TODO:
 	 *	-Crear tabla de símbolos
@@ -49,6 +49,10 @@ public class Semantico {
 
 	public boolean comenzarAnalisis() {
 		for (Token t : listaTokens) {
+			if (t.getSimbolo().equals("{"))
+				bloque++;
+			else if (t.getSimbolo().equals("}"))
+				bloque--;
 			if (t.getOperacion() != null) {
 				if (t.getTipoToken() == Gramatica.Identificador && !t.getOperacion().equals("clase")) {
 					if (t.getOperacion().equals("declaracion")) {
@@ -100,6 +104,7 @@ public class Semantico {
 
 	private void insertarDeclaracion(Token t) {
 		if (!tabla.containsKey(t.getSimbolo())) {
+			t.setAlcance("B" + bloque);
 			tabla.put(t.getSimbolo(), t);
 		} else {
 			errores += "La variable " + t.getSimbolo() + " ya se encuentra declarada en la línea " + tabla.get(t.getSimbolo()).getLinea() + " y se declaró de nuevo en la línea " + t.getLinea() + "\n";

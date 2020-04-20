@@ -19,10 +19,6 @@ public class Token {
 		return simbolo;
 	}
 
-	public void setSimbolo(String simobolo) {
-		this.simbolo = simobolo;
-	}
-
 	public String getValor() {
 		return valor;
 	}
@@ -41,10 +37,6 @@ public class Token {
 
 	public Gramatica getTipoToken() {
 		return tipoToken;
-	}
-
-	public void setTipoToken(Gramatica tipoToken) {
-		this.tipoToken = tipoToken;
 	}
 
 	public String getAlcance() {
