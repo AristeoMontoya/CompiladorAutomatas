@@ -15,6 +15,7 @@ public enum Gramatica
 	Booleano_literal("(true|false)"),
 	Modificador("(public|private)"),
 	Operadores_aritmeticos("(\\+|-|/|\\*)"),
+	Operadores_logicos("(&&|\\|\\|)"),
 	Identificador("[a-z]+[1-9]*"),
 	Entero_literal("[1-9]?[0-9]"); 
 

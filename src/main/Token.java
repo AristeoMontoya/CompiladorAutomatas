@@ -6,6 +6,7 @@ public class Token {
 	private String tipoDato;
 	private Gramatica tipoToken;
 	private String alcance;
+	private String operacion;
 	private int linea;
 
 	public Token(String simbolo, Gramatica tipoToken, int linea) {
@@ -60,5 +61,13 @@ public class Token {
 
 	public void setLinea(int linea) {
 		this.linea = linea;
+	}
+
+	public String getOperacion() {
+		return operacion;
+	}
+
+	public void setOperacion(String operacion) {
+		this.operacion = operacion;
 	}
 }

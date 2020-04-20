@@ -7,6 +7,7 @@ public class Parser {
 	private Gramatica token;
 	private String lexemaActual;
 	private String salida;
+	private String especificador;
 	private int lineaActual;
 	private int indiceIdentificador;
 	private int indice;
@@ -58,23 +59,29 @@ public class Parser {
 		identificador();
 		acomodar(Gramatica.Asignacion, "=");
 		if (token == Gramatica.Entero_literal) {
-			actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato());
+			actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), "asignacion");
 			integerLiteral();
+		} else if (token == Gramatica.Booleano_literal) {
+			actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), "asignacion");
+			booleanLiteral();
 		} else if (token == Gramatica.Identificador) {
-			actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato());
+			actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), "asignacion");
 			identificador();
 		}
 
 		while (token != Gramatica.Simbolos_especiales) {
 			if (token == Gramatica.Operadores_aritmeticos) {
 				avanza();
+			} else if (token == Gramatica.Operadores_logicos) {
+				avanza();
 			} else {
 				error("arit", lineaActual);
 				break;
 			}
-
 			if (token == Gramatica.Entero_literal) {
 				integerLiteral();
+			} else if (token == Gramatica.Booleano_literal) {
+				booleanLiteral();
 			} else if (token == Gramatica.Identificador) {
 				identificador();
 			}
@@ -91,6 +98,8 @@ public class Parser {
 			modificador();
 		}
 		acomodar(Gramatica.Declaracion_clase, "class");
+		indiceIdentificador = indice;
+		actualizarToken(lexemaActual, "Identificador de clase", "clase");
 		identificador();
 		acomodar(Gramatica.Simbolos_especiales, "{");
 		fieldDeclaration();
@@ -160,21 +169,28 @@ public class Parser {
 
 	private void testingExpression() {
 		if (token == Gramatica.Identificador) {
+			actualizarToken(lexemaActual, null, "expresion");
 			identificador();
 		} else if (token == Gramatica.Entero_literal) {
 			integerLiteral();
+		} else if (token == Gramatica.Booleano_literal) {
+			booleanLiteral();
 		} else
 			error("", lineaActual);
 
 		if (token == Gramatica.Simbolos_de_evaluacion) {
 			avanza();
-		} else {
+		} else if (token == Gramatica.Operadores_logicos) {
+			avanza();
+		} else
 			error("Testing expression", lineaActual);
-		}
 
 		if (token == Gramatica.Entero_literal) {
 			integerLiteral();
+		} else if (token == Gramatica.Booleano_literal) {
+			booleanLiteral();
 		} else if (token == Gramatica.Identificador) {
+			actualizarToken(lexemaActual, null, "expresion");
 			identificador();
 		} else
 			error("componente", lineaActual);
@@ -192,6 +208,7 @@ public class Parser {
 		if (token == Gramatica.Modificador) {
 			modificador();
 		}
+		especificador = lexemaActual.equals("int") ? "Entero" : "Booleano";
 		epecificadorTipo();
 		indiceIdentificador = indice;
 		identificador();
@@ -203,12 +220,11 @@ public class Parser {
 	}
 
 	private void variableDeclarator() {
-		Token aux = listaTokens.get(indiceIdentificador);
 		if (token == Gramatica.Entero_literal) {
-			actualizarToken(lexemaActual, "Entero");
+			actualizarToken(lexemaActual, "Entero", "declaracion");
 			integerLiteral();
 		} else if (token == Gramatica.Booleano_literal) {
-			actualizarToken(lexemaActual, "Booleano");
+			actualizarToken(lexemaActual, "Booleano", "declaracion");
 			booleanLiteral();
 		} else {
 			error("", lineaActual);
@@ -216,7 +232,6 @@ public class Parser {
 	}
 
 	private void whileStatement() {
-
 		acomodar(Gramatica.Simbolos_especiales, "(");
 		expression();
 		acomodar(Gramatica.Simbolos_especiales, ")");
@@ -225,10 +240,11 @@ public class Parser {
 		acomodar(Gramatica.Simbolos_especiales, "}");
 	}
 
-	public void actualizarToken(String valor, String tipodeDato) {
+	public void actualizarToken(String valor, String tipodeDato, String operacion) {
 		Token aux = listaTokens.get(indiceIdentificador);
+		aux.setTipoDato(operacion.equals("declaracion") ? especificador : tipodeDato);
 		aux.setValor(valor);
-		aux.setTipoDato(tipodeDato);
+		aux.setOperacion(operacion);
 		listaTokens.set(indiceIdentificador, aux);
 	}
 

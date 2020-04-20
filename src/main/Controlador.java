@@ -38,9 +38,6 @@ public class Controlador {
 		} else {
 			tokens = sintactico.getListaTokens();
 		}
-		for (Token aux : tokens) {
-			System.out.println("Simbolo: " + aux.getSimbolo() + "\tValor: " + aux.getValor() + "\tTipo de dato: " + aux.getTipoDato() + "\tPosicion: " + aux.getLinea());
-		}
 	}
 
 	private void semantico() {

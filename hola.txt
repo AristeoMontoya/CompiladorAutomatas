@@ -1,1 +1,0 @@
-Documento de prueba para ver si ya está git configurado en Linux
