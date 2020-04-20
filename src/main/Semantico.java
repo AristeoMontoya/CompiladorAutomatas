@@ -8,6 +8,7 @@ public class Semantico {
 	private ArrayList<Token> listaTokens;
 	private String errores;
 	private int indice = 0;
+	private int id = 1;
 
 	/*	TODO:
 	 *	-Crear tabla de símbolos
@@ -36,7 +37,7 @@ public class Semantico {
 	 *		un mensaje con la variable y la posición donde se realiza la segunda declaración.
 	 *		Además agregar la posición donde se realizó la primera declaración
 	 *
-	 *	-Validar operando de tipos compatibles
+	 *	-Validar operando de tipos compatibles *
 	 *		Si se encuentra una expresión con operadores no aptos al contexto
 	 *		de tipos de datos usados, mostrar un mensaje con la posición de la
 	 *		expresión
@@ -46,31 +47,29 @@ public class Semantico {
 		errores = "";
 	}
 
-	public void comenzarAnalisis() {
+	public boolean comenzarAnalisis() {
 		for (Token t : listaTokens) {
-			if (t.getOperacion() == null && t.getTipoToken() == Gramatica.Identificador) {
-				if (!tabla.containsKey(t.getSimbolo())) {
-					errores += "La variable " + t.getSimbolo() + " se utilizó sin ser declarada en la línea " + t.getLinea() + " \n";
+			if (t.getOperacion() != null) {
+				if (t.getTipoToken() == Gramatica.Identificador && !t.getOperacion().equals("clase")) {
+					if (t.getOperacion().equals("declaracion")) {
+						insertarDeclaracion(t);
+					} else if (t.getOperacion().equals("asignacion") || t.getOperacion().equals("expresion")) {
+						validarOperacion(t);
+					}
+					validarTipodeDatos(t);
 				}
-			} else if (t.getTipoToken() == Gramatica.Identificador && !t.getOperacion().equals("clase")) {
-				System.out.println("Evaluando " + t.getSimbolo());
-				if (t.getOperacion().equals("declaracion")) {
-					insertarDeclaracion(t);
-				} else if (t.getOperacion().equals("asignacion")) {
-					validarOperacion(t);
-				}
-				validarTipodeDatos(t);
 			}
 			indice++;
 		}
-		System.out.println(errores);
+		return errores.isEmpty();
 	}
 
 	private void validarOperacion(Token t) {
+		if (!validarDeclaracion(t))
+			return;
 		Token aux = tabla.get(t.getSimbolo());
 		Gramatica operador = listaTokens.get(indice + 1).getTipoToken();
-		System.out.println("Entró " + aux.getSimbolo() + " y el operador " + listaTokens.get(indice +1).getSimbolo());
-		if (aux.getTipoDato().equals("Entero") && (operador != Gramatica.Operadores_aritmeticos && operador != Gramatica.Asignacion)) {
+		if (aux.getTipoDato().equals("Entero") && (operador != Gramatica.Simbolos_de_evaluacion && operador != Gramatica.Asignacion)) {
 			errores += "Se usaron operadores incorrectos para la variable " + t.getSimbolo() + " en la línea: " + t.getLinea() + "\n";
 		} else if (aux.getTipoDato().equals("Booleano") && operador != Gramatica.Operadores_logicos && operador != Gramatica.Asignacion) {
 			errores += "Se usaron operadores incorrectos para la variable " + t.getSimbolo() + " en la línea: " + t.getLinea() + "\n";
@@ -78,13 +77,25 @@ public class Semantico {
 	}
 
 	private void validarTipodeDatos(Token t) {
+		if (t.getOperacion().equals("expresion"))
+			return;
+		if (!validarDeclaracion(t))
+			return;
 		Token aux = tabla.get(t.getSimbolo());
 		Gramatica tipo = getTipoDato(t.getValor());
 		if (aux.getTipoDato().equals("Entero") && tipo != Gramatica.Entero_literal) {
-			errores += "La variable " + t.getSimbolo() + " es de tipo entero y recibe el valor " + t.getValor() + "\n";
+			errores += "La variable " + t.getSimbolo() + " es de tipo entero y recibe el valor \"" + t.getValor() + "\" en la línea: " + t.getLinea() + "\n";
 		} else if (aux.getTipoDato().equals("Booleano") && tipo != Gramatica.Booleano_literal) {
-			errores += "La variable " + t.getSimbolo() + " es de tipo booleano y recibe el valor " + t.getValor() + "\n";
+			errores += "La variable " + t.getSimbolo() + " es de tipo booleano y recibe el valor \"" + t.getValor() + "\" en la línea: " + t.getLinea() + "\n";
 		}
+	}
+
+	private boolean validarDeclaracion(Token t) {
+		if (!tabla.containsKey(t.getSimbolo())) {
+			errores += "La variable \"" + t.getSimbolo() + "\" no se encuentra declarada. Fue usada en la línea: " + t.getLinea() + "\n";
+			return false;
+		}
+		return true;
 	}
 
 	private void insertarDeclaracion(Token t) {
@@ -103,5 +114,13 @@ public class Semantico {
 			}
 		}
 		return null;
+	}
+
+	public HashMap<String, Token> getTabla() {
+		return tabla;
+	}
+
+	public String getErrores() {
+		return errores;
 	}
 }

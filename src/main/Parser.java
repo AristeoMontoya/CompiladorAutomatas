@@ -169,7 +169,8 @@ public class Parser {
 
 	private void testingExpression() {
 		if (token == Gramatica.Identificador) {
-			actualizarToken(lexemaActual, null, "expresion");
+			indiceIdentificador = indice;
+			actualizarToken(lexemaActual,"","expresion");
 			identificador();
 		} else if (token == Gramatica.Entero_literal) {
 			integerLiteral();
@@ -190,7 +191,6 @@ public class Parser {
 		} else if (token == Gramatica.Booleano_literal) {
 			booleanLiteral();
 		} else if (token == Gramatica.Identificador) {
-			actualizarToken(lexemaActual, null, "expresion");
 			identificador();
 		} else
 			error("componente", lineaActual);

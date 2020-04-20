@@ -67,7 +67,7 @@ public class Ventana extends JFrame {
 		scroll_consola = new JScrollPane(jta_consola);
 		jtb_panel_consola.add(scroll_consola, "Consola");
 
-		encabezado = new String[]{"Nombre", "Tipo de dato", "Dato que contiene"};
+		encabezado = new String[]{"Nombre", "Valor", "Tipo de dato", "Posición", "Alcance"};
 		modelo_tabla = new DefaultTableModel();
 		modelo_tabla.setColumnIdentifiers(encabezado);
 		tabla_identificadores = new JTable(modelo_tabla);
@@ -95,23 +95,26 @@ public class Ventana extends JFrame {
 
 	private void iniciarProceso() {
 		Controlador compilador = new Controlador(jta_texto.getText());
-		compilador.iniciar();
-		resultadoAnalisis(compilador);
+		if (!compilador.iniciar())
+			resultadoAnalisis(compilador.getErrores());
+		else {
+			resultadoAnalisis("");
+			llenarTabla(compilador.getTabla());
+		}
 	}
 
-	private void resultadoAnalisis(Controlador compilador) {
-		if (compilador.encontroErrores()) {
-			jta_consola.setText(compilador.getErrores());
+	private void resultadoAnalisis(String resultado) {
+		if (!resultado.isEmpty()) {
+			jta_consola.setText(resultado);
 		} else {
 			jta_consola.setText("Proceso finalizado con éxito. No se encontraron errores");
 		}
 	}
 
-	private void llenarTabla(LinkedList<String> nombres) {
+	private void llenarTabla(ArrayList<String[]> registros) {
 		borrarTabla(tabla_identificadores.getRowCount() - 1);
-		for (String nombre : nombres) {
-			String[] renglon = new String[]{nombre, "", ""};
-			modelo_tabla.addRow(renglon);
+		for (String[] registro : registros) {
+			modelo_tabla.addRow(registro);
 		}
 	}
 
