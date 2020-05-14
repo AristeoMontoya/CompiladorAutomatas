@@ -46,7 +46,6 @@ public class Semantico {
 		this.listaTokens = listaTokens;
 		errores = "";
 	}
-
 	public boolean comenzarAnalisis() {
 		for (Token t : listaTokens) {
 			if (t.getSimbolo().equals("{"))

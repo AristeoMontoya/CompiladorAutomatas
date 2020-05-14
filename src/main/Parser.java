@@ -170,7 +170,7 @@ public class Parser {
 	private void testingExpression() {
 		if (token == Gramatica.Identificador) {
 			indiceIdentificador = indice;
-			actualizarToken(lexemaActual,"","expresion");
+			actualizarToken(lexemaActual, "", "expresion");
 			identificador();
 		} else if (token == Gramatica.Entero_literal) {
 			integerLiteral();
