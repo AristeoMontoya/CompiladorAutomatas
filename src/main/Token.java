@@ -7,12 +7,21 @@ public class Token {
 	private Gramatica tipoToken;
 	private String alcance;
 	private String operacion;
+	private String expresion;
 	private int linea;
 
 	public Token(String simbolo, Gramatica tipoToken, int linea) {
 		this.simbolo = simbolo;
 		this.tipoToken = tipoToken;
 		this.linea = linea;
+	}
+
+	public String getExpresion() {
+		return expresion;
+	}
+
+	public void setExpresion(String expresion) {
+		this.expresion = expresion;
 	}
 
 	public String getSimbolo() {

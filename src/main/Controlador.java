@@ -39,6 +39,9 @@ public class Controlador {
 		} else {
 			tokens = sintactico.getListaTokens();
 		}
+		for (Token t : tokens) {
+			System.out.println(t.getSimbolo() + " : " + t.getExpresion());
+		}
 	}
 
 	private void semantico() {

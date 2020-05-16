@@ -11,6 +11,8 @@ public class Parser {
 	private int lineaActual;
 	private int indiceIdentificador;
 	private int indice;
+	private int contadorExpresiones = 0;
+	private boolean banderaExpersiones = false;
 
 	public Parser(ArrayList<Token> listaTokens) {    //TODO: Agregar método para las asignaciones de datos a los token.
 		this.listaTokens = listaTokens;
@@ -55,9 +57,17 @@ public class Parser {
 	}
 
 	private void expresionAritmetica() {
+		banderaExpersiones = true;
+		contadorExpresiones++;
 		indiceIdentificador = indice;
+		int indiceAux = indice;
+		actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), null);
 		identificador();
+		indiceIdentificador++;
+		actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), null);
 		acomodar(Gramatica.Asignacion, "=");
+		indiceIdentificador++;
+		actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), null);
 		if (token == Gramatica.Entero_literal) {
 			actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), "asignacion");
 			integerLiteral();
@@ -65,11 +75,13 @@ public class Parser {
 			actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), "asignacion");
 			booleanLiteral();
 		} else if (token == Gramatica.Identificador) {
-			actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), "asignacion");
+			actualizarToken(lexemaActual, listaTokens.get(indiceAux).getTipoDato(), "asignacion");
 			identificador();
 		}
-
+		indiceIdentificador++;
 		while (token != Gramatica.Simbolos_especiales) {
+			actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), null);
+			indiceIdentificador++;
 			if (token == Gramatica.Operadores_aritmeticos) {
 				avanza();
 			} else if (token == Gramatica.Operadores_logicos) {
@@ -78,6 +90,8 @@ public class Parser {
 				error("arit", lineaActual);
 				break;
 			}
+			actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), null);
+			indiceIdentificador++;
 			if (token == Gramatica.Entero_literal) {
 				integerLiteral();
 			} else if (token == Gramatica.Booleano_literal) {
@@ -86,6 +100,8 @@ public class Parser {
 				identificador();
 			}
 		}
+		banderaExpersiones = false;
+		indiceIdentificador = indiceAux;
 		acomodar(Gramatica.Simbolos_especiales, ";");
 	}
 
@@ -143,7 +159,6 @@ public class Parser {
 
 	private void identificador() {
 		acomodar(Gramatica.Identificador, lexemaActual);
-
 	}
 
 	private void modificador() {
@@ -242,9 +257,13 @@ public class Parser {
 
 	public void actualizarToken(String valor, String tipodeDato, String operacion) {
 		Token aux = listaTokens.get(indiceIdentificador);
-		aux.setTipoDato(operacion.equals("declaracion") ? especificador : tipodeDato);
+		if (operacion != null)
+			aux.setTipoDato(operacion.equals("declaracion") ? especificador : tipodeDato);
 		aux.setValor(valor);
 		aux.setOperacion(operacion);
+		if (banderaExpersiones) {
+			aux.setExpresion("E" + contadorExpresiones);
+		}
 		listaTokens.set(indiceIdentificador, aux);
 	}
 
