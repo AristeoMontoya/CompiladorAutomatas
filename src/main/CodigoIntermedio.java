@@ -38,6 +38,7 @@ public class CodigoIntermedio {
 		System.out.println(cosa);
 		Nodo t = abb.construirArbol(cosa.toCharArray());
 		abb.infija(t);
+		abb.resolver(t);
 	}
 
 	private String convertirNotacion(String expresion) { //TODO: Ordenar esto.

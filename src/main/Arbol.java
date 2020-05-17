@@ -24,16 +24,41 @@ public class Arbol {
 	public void infija(Nodo t) {
 		if (t != null) {
 			infija(t.izquierda);
-			System.out.println(t.valor + " ");
+			System.out.println(t.valor);
 			infija(t.derecha);
 		}
 	}
 
 	public double resolver(Nodo t) {
-		if(t != null) {
+		if (t != null) {
+			String dato = "" + t.valor;
 			double valor1, valor2;
 			valor1 = resolver(t.izquierda);
 			valor2 = resolver(t.derecha);
+			if (dato.matches("^(\\+|-|/|\\*)")) {
+				double resultado = 0;
+				switch (t.valor) {
+					case '+':
+						System.out.println(valor1 + " + " + valor2);
+						resultado = valor1 + valor2;
+						break;
+					case '-':
+						System.out.println(valor1 + " - " + valor2);
+						resultado = valor1 - valor2;
+						break;
+					case '*':
+						System.out.println(valor1 + " * " + valor2);
+						resultado = valor1 * valor2;
+						break;
+					case '/':
+						System.out.println(valor1 + " / " + valor2);
+						resultado = valor1 / valor2;
+						break;
+				}
+				return resultado;
+			} else {
+				return Double.parseDouble("" + t.valor);
+			}
 		}
 		return 0;
 	}
