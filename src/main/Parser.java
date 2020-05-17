@@ -14,7 +14,7 @@ public class Parser {
 	private int contadorExpresiones = 0;
 	private boolean banderaExpersiones = false;
 
-	public Parser(ArrayList<Token> listaTokens) {    //TODO: Agregar método para las asignaciones de datos a los token.
+	public Parser(ArrayList<Token> listaTokens) {    //TODO: Rehacer todo esto. O mínimo ordenar el código.
 		this.listaTokens = listaTokens;
 	}
 
