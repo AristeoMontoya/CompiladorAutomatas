@@ -20,6 +20,7 @@ public class Controlador {
 		lexico();
 		sintactico();        //TODO: Rehacer esto. Pero después
 		semantico();         //TODO: Hacer esto correctamente. Después también
+		codigoIntermedio();
 		return errores.isEmpty();
 	}
 
@@ -39,9 +40,6 @@ public class Controlador {
 		} else {
 			tokens = sintactico.getListaTokens();
 		}
-		for (Token t : tokens) {
-			System.out.println(t.getSimbolo() + " : " + t.getExpresion());
-		}
 	}
 
 	private void semantico() {
@@ -53,7 +51,7 @@ public class Controlador {
 	}
 
 	private void codigoIntermedio() {
-
+		CodigoIntermedio intermedio = new CodigoIntermedio(tokens);
 	}
 
 	private void optimizacion() {

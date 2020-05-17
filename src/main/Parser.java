@@ -225,13 +225,25 @@ public class Parser {
 		}
 		especificador = lexemaActual.equals("int") ? "Entero" : "Booleano";
 		epecificadorTipo();
-		indiceIdentificador = indice;
+		indiceIdentificador = indice;    //FIXME: NO MOVER
+		if (especificador.equals("Entero")) {
+			banderaExpersiones = true;
+		}
 		identificador();
+		int indiceAuxiliar = indiceIdentificador;
+		if (banderaExpersiones)
+			indiceIdentificador++;
 		if (token == Gramatica.Asignacion) {
+			actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), null);
 			avanza();
+			indiceIdentificador++;
+			actualizarToken(lexemaActual, listaTokens.get(indiceIdentificador).getTipoDato(), null);
+			indiceIdentificador = indiceAuxiliar;
 			variableDeclarator();
 		}
-
+		if (banderaExpersiones)
+			contadorExpresiones++;
+		banderaExpersiones = false;
 	}
 
 	private void variableDeclarator() {
