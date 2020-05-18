@@ -15,6 +15,7 @@ class Nodo {
 
 public class Arbol {
 	private ArrayList<Cuadruplo> listaCuadruplos;
+	private Nodo raiz;
 
 	public Arbol() {
 		listaCuadruplos = new ArrayList<>();
@@ -98,5 +99,13 @@ public class Arbol {
 
 	public ArrayList<Cuadruplo> getListaCuadruplos() {
 		return listaCuadruplos;
+	}
+
+	public Nodo getRaiz() {
+		return raiz;
+	}
+
+	public void setRaiz(Nodo raiz) {
+		this.raiz = raiz;
 	}
 }

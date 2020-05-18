@@ -9,6 +9,7 @@ public class Controlador {
 	private String errores;
 	private ArrayList<String[]> tabla;
 	private ArrayList<Token> tokens;
+	private String cuadruplos;
 
 	public Controlador(String codigo) {
 		Codigo = codigo;
@@ -52,6 +53,7 @@ public class Controlador {
 
 	private void codigoIntermedio() {
 		CodigoIntermedio intermedio = new CodigoIntermedio(tokens);
+		formatoCuadruplos(intermedio.getListaCuadruplos());
 	}
 
 	private void optimizacion() {
@@ -77,6 +79,28 @@ public class Controlador {
 
 	public ArrayList<String[]> getTabla() {
 		return tabla;
+	}
+
+	private void formatoCuadruplos(ArrayList<Cuadruplo> listaCuadruplos) {
+		String identificador = null;
+		if(listaCuadruplos.get(0).getIdentificador() != null)
+			identificador = listaCuadruplos.get(0).getIdentificador();
+		int conteo = 1;
+		if (listaCuadruplos.size() > 1)
+			cuadruplos = "Cuadruplo 1";
+		for (Cuadruplo cuad : listaCuadruplos) {
+			if (identificador.equals(cuad.getIdentificador())) {
+				cuadruplos += "\n" + cuad.getFormato();
+			} else {
+				conteo++;
+				cuadruplos += "\nCuadruplo " + conteo;
+				cuadruplos += "\n" + cuad.getFormato();
+			}
+		}
+	}
+
+	public String getCuadruplos() {
+		return cuadruplos;
 	}
 
 	public String getErrores() {

@@ -1,13 +1,33 @@
 package main;
 
 public class Cuadruplo {
-	String Operando1, Operando2, Operador, Resultado;
+	String Operando1, Operando2, Operador, Resultado, Etiqueta, Identificador;
 
 	public Cuadruplo(String operando1, String operando2, String operador, String resultado) {
 		Operando1 = operando1;
 		Operando2 = operando2;
 		Operador = operador;
 		Resultado = resultado;
+	}
+
+	public String getFormato() {
+		return Operador + " " + Operando1 + " " + Operando2 + " " + Etiqueta;
+	}
+
+	public String getIdentificador() {
+		return Identificador;
+	}
+
+	public void setIdentificador(String identificador) {
+		Identificador = identificador;
+	}
+
+	public String getEtiqueta() {
+		return Etiqueta;
+	}
+
+	public void setEtiqueta(String etiqueta) {
+		Etiqueta = etiqueta;
 	}
 
 	public String getOperando1() {

@@ -16,11 +16,13 @@ public class Ventana extends JFrame {
 	private JPanel panel_sur;
 	private JTextArea jta_texto;
 	private JTextArea jta_consola;
+	private JTextArea jta_cuadruplos;
 	private JToolBar barra_tareas;
 	private JButton btn_iniciar;
 	private Lexer lexer;
 	private JTabbedPane jtb_panel_consola;
 	private JScrollPane scroll_consola;
+	private JScrollPane scroll_cuadruplos;
 	private JScrollPane scroll_editor;
 	private JScrollPane scroll_identificadores;
 	private JTable tabla_identificadores;
@@ -67,6 +69,7 @@ public class Ventana extends JFrame {
 		scroll_consola = new JScrollPane(jta_consola);
 		jtb_panel_consola.add(scroll_consola, "Consola");
 
+
 		encabezado = new String[]{"Nombre", "Valor", "Tipo de dato", "Posición", "Alcance"};
 		modelo_tabla = new DefaultTableModel();
 		modelo_tabla.setColumnIdentifiers(encabezado);
@@ -75,6 +78,11 @@ public class Ventana extends JFrame {
 		scroll_identificadores = new JScrollPane(tabla_identificadores);
 
 		jtb_panel_consola.add(scroll_identificadores, "Tabla de identificadores");
+
+		jta_cuadruplos = new JTextArea();
+		jta_cuadruplos.setEditable(false);
+		scroll_cuadruplos = new JScrollPane(jta_cuadruplos);
+		jtb_panel_consola.add(scroll_cuadruplos, "Cuadruplos");
 
 		barra_tareas = new JToolBar();
 		barra_tareas.setFloatable(false);
@@ -100,6 +108,7 @@ public class Ventana extends JFrame {
 		else {
 			resultadoAnalisis("");
 			llenarTabla(compilador.getTabla());
+			llenarCuadruplos(compilador.getCuadruplos());
 		}
 	}
 
@@ -116,6 +125,10 @@ public class Ventana extends JFrame {
 		for (String[] registro : registros) {
 			modelo_tabla.addRow(registro);
 		}
+	}
+
+	private void llenarCuadruplos(String cuadruplos) {
+		jta_cuadruplos.setText(cuadruplos);
 	}
 
 	private void borrarTabla(int i) {

@@ -16,6 +16,7 @@ public class CodigoIntermedio {
 	//		- 2. Hacer los cuadruplos.
 
 	private ArrayList<Token> listaTokens;
+	private ArrayList<Cuadruplo> listaCuadruplos;
 
 	public CodigoIntermedio(ArrayList<Token> tokens) {
 		listaTokens = tokens;
@@ -34,7 +35,9 @@ public class CodigoIntermedio {
 			t = arbolesExpresion[i].construirArbol(expresiones[i].toCharArray());
 			System.out.println(arbolesExpresion[i].resolver(t));
 			arbolesExpresion[i].resolver(t);
+			arbolesExpresion[i].setRaiz(t);
 		}
+		generarCuadruplos(arbolesExpresion, expresiones);
 	}
 
 	private String convertirNotacion(String expresion) { //TODO: Ordenar esto.
@@ -94,8 +97,24 @@ public class CodigoIntermedio {
 		return expresiones.toArray(new String[totalExpresiones]);
 	}
 
-	private void generarCuadruplos() {
-
+	private void generarCuadruplos(Arbol[] arboles, String[] expresiones) {
+		listaCuadruplos = new ArrayList<>();
+		String identificador;
+		int contador;
+		System.out.println(arboles.length);
+		for (int i = 0; i < arboles.length; i++) {
+			Arbol abb = arboles[i];
+			contador = 1;
+			identificador = expresiones[i].split("=")[0];
+			for (Cuadruplo cuad : abb.getListaCuadruplos()) {
+				cuad.setEtiqueta("Temporal " + contador);
+				if (contador > 1)
+					cuad.setOperando2("Temporal " + (contador - 1));
+				cuad.setIdentificador(identificador);
+				listaCuadruplos.add(cuad);
+				contador++;
+			}
+		}
 	}
 
 	private int precedencia(char c) {
@@ -108,5 +127,9 @@ public class CodigoIntermedio {
 				return 1;
 		}
 		return -1;
+	}
+
+	public ArrayList<Cuadruplo> getListaCuadruplos() {
+		return listaCuadruplos;
 	}
 }
