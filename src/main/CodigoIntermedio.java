@@ -23,29 +23,22 @@ public class CodigoIntermedio {
 	}
 
 	private void generarArboles() {
-		StringBuilder expresion = new StringBuilder();
-		Arbol abb = new Arbol();
-		boolean bandera = false;
 		ArrayList<Token> listaExpresiones = extraerExpresiones();
-		for (Token t : listaExpresiones) {
-			if (t.getExpresion().equals("E3") && bandera)
-				expresion.append(t.getSimbolo());
-			if (t.getExpresion().equals("E3") && t.getSimbolo().equals("=")) {
-				bandera = true;
-			}
-		}
-		String cosa = convertirNotacion("" + expresion + ")");
-		System.out.println(cosa);
-		Nodo t = abb.construirArbol(cosa.toCharArray());
-		int x = abb.resolver(t);
-		System.out.println("Resultado = " + x);
-		ArrayList<Cuadruplo> lista = abb.getListaCuadruplos();
-		for (Cuadruplo cuad : lista) {
-			System.out.println(cuad.Operando1 + " " + cuad.getOperando2() + " " + cuad.getOperador());
+		String[] expresiones = separarExpresiones(listaExpresiones);
+		Arbol[] arbolesExpresion = new Arbol[expresiones.length];
+		Nodo t;
+		for (int i = 0; i < expresiones.length; i++) {
+			System.out.println("Expresion: " + expresiones[i]);
+			expresiones[i] = convertirNotacion(expresiones[i]);
+			arbolesExpresion[i] = new Arbol();
+			t = arbolesExpresion[i].construirArbol(expresiones[i].toCharArray());
+			System.out.println(arbolesExpresion[i].resolver(t));
+			arbolesExpresion[i].resolver(t);
 		}
 	}
 
 	private String convertirNotacion(String expresion) { //TODO: Ordenar esto.
+		expresion += ")";
 		String resultado = "";
 		Stack<Character> pila = new Stack<>();
 		pila.push('(');
@@ -80,6 +73,25 @@ public class CodigoIntermedio {
 		Predicate<Token> porExpresion = t -> t.getExpresion() != null;
 		var lista = listaTokens.stream().filter(porExpresion).collect(Collectors.toList());
 		return (ArrayList<Token>) lista;
+	}
+
+	private String[] separarExpresiones(ArrayList<Token> lista) {
+		ArrayList<String> expresiones = new ArrayList<>();
+		String etiquetaActual = lista.get(0).getExpresion();
+		String expresion = "";
+		int totalExpresiones = 0;
+		for (Token t : lista) {
+			if (etiquetaActual.equals(t.getExpresion())) {
+				expresion += t.getSimbolo();
+			} else {
+				expresiones.add(expresion);
+				etiquetaActual = t.getExpresion();
+				expresion = "" + t.getSimbolo();
+				totalExpresiones++;
+			}
+		}
+		expresiones.add(expresion);
+		return expresiones.toArray(new String[totalExpresiones]);
 	}
 
 	private void generarCuadruplos() {
