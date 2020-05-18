@@ -11,7 +11,7 @@ public class Cuadruplo {
 	}
 
 	public String getFormato() {
-		return Operador + " " + Operando1 + " " + Operando2 + " " + Etiqueta;
+		return String.format("| %-10s | %-10s | %-10s | %-10s |", Operador, Operando1, Operando2, Etiqueta);
 	}
 
 	public String getIdentificador() {

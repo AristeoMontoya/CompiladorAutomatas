@@ -83,20 +83,22 @@ public class Controlador {
 
 	private void formatoCuadruplos(ArrayList<Cuadruplo> listaCuadruplos) {
 		String identificador = null;
-		if(listaCuadruplos.get(0).getIdentificador() != null)
+		if (listaCuadruplos.get(0).getIdentificador() != null)
 			identificador = listaCuadruplos.get(0).getIdentificador();
 		int conteo = 1;
 		if (listaCuadruplos.size() > 1)
 			cuadruplos = "Cuadruplo 1";
-		for (Cuadruplo cuad : listaCuadruplos) {
+		for (int i = 0; i < listaCuadruplos.size(); i++) {
+			Cuadruplo cuad = listaCuadruplos.get(i);
 			if (identificador.equals(cuad.getIdentificador())) {
 				cuadruplos += "\n" + cuad.getFormato();
 			} else {
 				conteo++;
-				cuadruplos += "\nCuadruplo " + conteo;
+				cuadruplos += "Resultado de " + listaCuadruplos.get(i - 1).getIdentificador() + " = " + listaCuadruplos.get(i - 1).getResultado() + "\nCuadruplo " + conteo;
 				cuadruplos += "\n" + cuad.getFormato();
 			}
 		}
+		cuadruplos += "\nResultado de " + listaCuadruplos.get(listaCuadruplos.size() - 1).getIdentificador() + " = " + listaCuadruplos.get(listaCuadruplos.size() - 1).getResultado();
 	}
 
 	public String getCuadruplos() {

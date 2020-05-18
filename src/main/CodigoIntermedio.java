@@ -17,6 +17,7 @@ public class CodigoIntermedio {
 
 	private ArrayList<Token> listaTokens;
 	private ArrayList<Cuadruplo> listaCuadruplos;
+	private ArrayList<Arbol> listaArboles;
 
 	public CodigoIntermedio(ArrayList<Token> tokens) {
 		listaTokens = tokens;
@@ -131,5 +132,9 @@ public class CodigoIntermedio {
 
 	public ArrayList<Cuadruplo> getListaCuadruplos() {
 		return listaCuadruplos;
+	}
+
+	public ArrayList<Arbol> getListaArboles(){
+		return listaArboles;
 	}
 }

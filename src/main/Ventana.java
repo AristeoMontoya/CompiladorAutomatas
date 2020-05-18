@@ -55,6 +55,7 @@ public class Ventana extends JFrame {
 	private void inicializar() {
 		jta_texto = new JTextArea();
 		jta_texto.setTabSize(2);
+		jta_texto.setFont(new Font("Andale Mono", Font.PLAIN, 12));
 		scroll_editor = new JScrollPane(jta_texto);
 		this.add(scroll_editor, BorderLayout.CENTER);
 
@@ -81,6 +82,7 @@ public class Ventana extends JFrame {
 
 		jta_cuadruplos = new JTextArea();
 		jta_cuadruplos.setEditable(false);
+		jta_cuadruplos.setFont(new Font("Andale Mono", Font.PLAIN, 12));
 		scroll_cuadruplos = new JScrollPane(jta_cuadruplos);
 		jtb_panel_consola.add(scroll_cuadruplos, "Cuadruplos");
 
@@ -128,7 +130,9 @@ public class Ventana extends JFrame {
 	}
 
 	private void llenarCuadruplos(String cuadruplos) {
-		jta_cuadruplos.setText(cuadruplos);
+		String textoCuadruplos = String.format("| %-10s | %-10s | %-10s | %-10s |\n", "Operador", "Operando1", "Operando2", "Resultado");
+		textoCuadruplos += cuadruplos;
+		jta_cuadruplos.setText(textoCuadruplos);
 	}
 
 	private void borrarTabla(int i) {

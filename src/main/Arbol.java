@@ -16,6 +16,7 @@ class Nodo {
 public class Arbol {
 	private ArrayList<Cuadruplo> listaCuadruplos;
 	private Nodo raiz;
+	private String etiqueta;
 
 	public Arbol() {
 		listaCuadruplos = new ArrayList<>();
@@ -107,5 +108,13 @@ public class Arbol {
 
 	public void setRaiz(Nodo raiz) {
 		this.raiz = raiz;
+	}
+
+	public String getEtiqueta() {
+		return etiqueta;
+	}
+
+	public void setEtiqueta(String etiqueta) {
+		this.etiqueta = etiqueta;
 	}
 }
