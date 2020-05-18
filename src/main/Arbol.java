@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 class Nodo {
@@ -13,8 +14,10 @@ class Nodo {
 }
 
 public class Arbol {
+	private ArrayList<Cuadruplo> listaCuadruplos;
 
 	public Arbol() {
+		listaCuadruplos = new ArrayList<>();
 	}
 
 	private boolean esOperador(char c) {
@@ -29,35 +32,39 @@ public class Arbol {
 		}
 	}
 
-	public double resolver(Nodo t) {
+	public int resolver(Nodo t) {
 		if (t != null) {
 			String dato = "" + t.valor;
-			double valor1, valor2;
+			int valor1, valor2;
 			valor1 = resolver(t.izquierda);
 			valor2 = resolver(t.derecha);
 			if (dato.matches("^(\\+|-|/|\\*)")) {
-				double resultado = 0;
+				int resultado = 0;
 				switch (t.valor) {
 					case '+':
 						System.out.println(valor1 + " + " + valor2);
 						resultado = valor1 + valor2;
+						listaCuadruplos.add(new Cuadruplo("" + valor1, "" + valor2, "+", "" + resultado));
 						break;
 					case '-':
 						System.out.println(valor1 + " - " + valor2);
 						resultado = valor1 - valor2;
+						listaCuadruplos.add(new Cuadruplo("" + valor1, "" + valor2, "-", "" + resultado));
 						break;
 					case '*':
 						System.out.println(valor1 + " * " + valor2);
 						resultado = valor1 * valor2;
+						listaCuadruplos.add(new Cuadruplo("" + valor1, "" + valor2, "*", "" + resultado));
 						break;
 					case '/':
 						System.out.println(valor1 + " / " + valor2);
 						resultado = valor1 / valor2;
+						listaCuadruplos.add(new Cuadruplo("" + valor1, "" + valor2, "/", "" + resultado));
 						break;
 				}
 				return resultado;
 			} else {
-				return Double.parseDouble("" + t.valor);
+				return Integer.parseInt("" + t.valor);
 			}
 		}
 		return 0;
@@ -87,5 +94,9 @@ public class Arbol {
 		t1 = pila.peek();
 		pila.pop();
 		return t1;
+	}
+
+	public ArrayList<Cuadruplo> getListaCuadruplos() {
+		return listaCuadruplos;
 	}
 }

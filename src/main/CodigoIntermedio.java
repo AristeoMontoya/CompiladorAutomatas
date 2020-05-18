@@ -37,8 +37,12 @@ public class CodigoIntermedio {
 		String cosa = convertirNotacion("" + expresion + ")");
 		System.out.println(cosa);
 		Nodo t = abb.construirArbol(cosa.toCharArray());
-		abb.infija(t);
-		abb.resolver(t);
+		int x = abb.resolver(t);
+		System.out.println("Resultado = " + x);
+		ArrayList<Cuadruplo> lista = abb.getListaCuadruplos();
+		for (Cuadruplo cuad : lista) {
+			System.out.println(cuad.Operando1 + " " + cuad.getOperando2() + " " + cuad.getOperador());
+		}
 	}
 
 	private String convertirNotacion(String expresion) { //TODO: Ordenar esto.
