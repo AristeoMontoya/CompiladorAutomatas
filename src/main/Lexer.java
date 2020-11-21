@@ -17,7 +17,6 @@ public class Lexer {
 		lineasCodigo = codigo.split("\r\n|\r|\n");
 		tokens = new ArrayList<>();
 
-
 		caracteresVacios.add('\r');
 		caracteresVacios.add('\n');
 		caracteresVacios.add((char) 8);

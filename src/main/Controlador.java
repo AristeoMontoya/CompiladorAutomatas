@@ -57,11 +57,11 @@ public class Controlador {
 	}
 
 	private void optimizacion() {
-
+		//TODO Por implementar
 	}
 
 	private void codigoObjeto() {
-
+		//TODO Por implementar
 	}
 
 	private void generarTabla(HashMap<String, Token> tablaAux) {

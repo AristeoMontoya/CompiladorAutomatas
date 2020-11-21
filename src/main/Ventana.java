@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class Ventana extends JFrame {
 	private static final long serialVersionUID = -3760618021421768380L;
@@ -19,7 +18,6 @@ public class Ventana extends JFrame {
 	private JTextArea jta_cuadruplos;
 	private JToolBar barra_tareas;
 	private JButton btn_iniciar;
-	private Lexer lexer;
 	private JTabbedPane jtb_panel_consola;
 	private JScrollPane scroll_consola;
 	private JScrollPane scroll_cuadruplos;
@@ -28,8 +26,6 @@ public class Ventana extends JFrame {
 	private JTable tabla_identificadores;
 	private DefaultTableModel modelo_tabla;
 	private String encabezado[];
-	private LinkedList<String> identificadores;
-	private ArrayList<String> listaLexemas;
 
 	private boolean banderaIconos = true;
 
@@ -38,7 +34,7 @@ public class Ventana extends JFrame {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 		}
-		setTitle("Compilador");
+		setTitle("Compilador.");
 		setSize(800, 600);
 		try {
 			setIconImage(cargarIcono("/recursos/icono_codigo.png"));
@@ -100,7 +96,6 @@ public class Ventana extends JFrame {
 
 		barra_tareas.add(btn_iniciar);
 		this.add(barra_tareas, BorderLayout.NORTH);
-
 	}
 
 	private void iniciarProceso() {

@@ -1,2 +1,14 @@
 /bin/
 *.class
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
+.vscode
+.idea
+.settings
+*.class
+.project

@@ -44,22 +44,18 @@ public class Arbol {
 				int resultado = 0;
 				switch (t.valor) {
 					case '+':
-						System.out.println(valor1 + " + " + valor2);
 						resultado = valor1 + valor2;
 						listaCuadruplos.add(new Cuadruplo("" + valor1, "" + valor2, "+", "" + resultado));
 						break;
 					case '-':
-						System.out.println(valor1 + " - " + valor2);
 						resultado = valor1 - valor2;
 						listaCuadruplos.add(new Cuadruplo("" + valor1, "" + valor2, "-", "" + resultado));
 						break;
 					case '*':
-						System.out.println(valor1 + " * " + valor2);
 						resultado = valor1 * valor2;
 						listaCuadruplos.add(new Cuadruplo("" + valor1, "" + valor2, "*", "" + resultado));
 						break;
 					case '/':
-						System.out.println(valor1 + " / " + valor2);
 						resultado = valor1 / valor2;
 						listaCuadruplos.add(new Cuadruplo("" + valor1, "" + valor2, "/", "" + resultado));
 						break;
