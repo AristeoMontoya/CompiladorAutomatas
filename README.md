@@ -7,6 +7,8 @@ Algunos ejemplos de lenguajes de programación interpretados son Python, JavaScr
 Existen, además, transpiladores, que son piezas de software que traducen de un lenguaje de programación a otro. Un ejemplo de transpilador es Cython, que traduce código escrito en Python a código en C para posteriormente ser compilado con el compilador de C.
 
 ---
+**[Gramática](gramatica.md) usada para este proyecto**
+
 ## Fases de un compilador
 - [Analizador léxico](#lexico)
 - [Analizador sintáctico](#sintactico)
