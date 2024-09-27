@@ -39,7 +39,7 @@ public class Ventana extends JFrame {
 		setTitle("Compilador.");
 		setSize(800, 600);
 		try {
-			setIconImage(cargarIcono("/recursos/icono_codigo.png"));
+			setIconImage(cargarIcono("icono_codigo.png"));
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "El programa se ejecutará sin íconos", "Error al cargar íconos", JOptionPane.PLAIN_MESSAGE);
 			banderaIconos = false;
@@ -91,9 +91,9 @@ public class Ventana extends JFrame {
 		btn_iniciar.addActionListener(e -> iniciarProceso());
 
 		if (banderaIconos) {
-			jtb_panel_consola.setIconAt(0, new ImageIcon(this.getClass().getResource("/recursos/icono_consola.png")));
-			jtb_panel_consola.setIconAt(1, new ImageIcon(this.getClass().getResource("/recursos/icono_lista.png")));
-			btn_iniciar.setIcon(new ImageIcon(this.getClass().getResource("/recursos/icono_compilar.png")));
+			jtb_panel_consola.setIconAt(0, new ImageIcon(this.getClass().getClassLoader().getResource("icono_consola.png")));
+			jtb_panel_consola.setIconAt(1, new ImageIcon(this.getClass().getClassLoader().getResource("icono_lista.png")));
+			btn_iniciar.setIcon(new ImageIcon(this.getClass().getClassLoader().getResource("icono_compilar.png")));
 		}
 
 		barra_tareas.add(btn_iniciar);
@@ -141,7 +141,7 @@ public class Ventana extends JFrame {
 
 	private BufferedImage cargarIcono(String ruta) {
 		try {
-			InputStream imageInputStream = this.getClass().getResourceAsStream(ruta);
+			InputStream imageInputStream = this.getClass().getClassLoader().getResourceAsStream(ruta);
 			return ImageIO.read(imageInputStream);
 
 		} catch (IOException exception) {
