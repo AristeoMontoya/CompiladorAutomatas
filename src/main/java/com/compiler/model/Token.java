@@ -1,4 +1,4 @@
-package main;
+package com.compiler.model;
 
 public class Token {
 	private String simbolo;

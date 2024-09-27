@@ -1,4 +1,7 @@
-package main;
+package com.compiler.process;
+
+import com.compiler.model.Gramatica;
+import com.compiler.model.Token;
 
 import java.util.ArrayList;
 import java.util.HashSet;

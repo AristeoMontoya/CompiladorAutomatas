@@ -1,4 +1,4 @@
-package main;
+package com.compiler.model;
 
 import java.util.ArrayList;
 import java.util.Stack;

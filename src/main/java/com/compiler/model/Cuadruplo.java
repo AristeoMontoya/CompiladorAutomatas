@@ -1,4 +1,4 @@
-package main;
+package com.compiler.model;
 
 public class Cuadruplo {
 	String Operando1, Operando2, Operador, Resultado, Etiqueta, Identificador;

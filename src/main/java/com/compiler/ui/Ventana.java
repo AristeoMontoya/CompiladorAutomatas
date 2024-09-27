@@ -1,4 +1,6 @@
-package main;
+package com.compiler.ui;
+
+import com.compiler.process.Controlador;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

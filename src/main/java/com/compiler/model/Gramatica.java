@@ -1,4 +1,4 @@
-package main;
+package com.compiler.model;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,7 +26,7 @@ public enum Gramatica
 		patron = Pattern.compile("^" + regex);
 	}
 
-	int finalCoincidencias(String s)
+	public int finalCoincidencias(String s)
 	{
 		Matcher m = patron.matcher(s);
 
