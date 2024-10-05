@@ -1,74 +1,74 @@
 package com.compiler.model;
 
 public class Token {
-    private String simbolo;
-    private String valor;
-    private String tipoDato;
-    private Gramatica tipoToken;
-    private String alcance;
-    private String operacion;
-    private String expresion;
-    private int linea;
+    private final String symbol;
+    private String value;
+    private String dataType; // TODO: Make this an enum
+    private Grammar tokenType;
+    private String scope;
+    private String operation;
+    private String expression;
+    private int line;
 
-    public Token(String simbolo, Gramatica tipoToken, int linea) {
-        this.simbolo = simbolo;
-        this.tipoToken = tipoToken;
-        this.linea = linea;
+    public Token(String symbol, Grammar tokenType, int line) {
+        this.symbol = symbol;
+        this.tokenType = tokenType;
+        this.line = line;
     }
 
-    public String getExpresion() {
-        return expresion;
+    public String getExpression() {
+        return expression;
     }
 
-    public void setExpresion(String expresion) {
-        this.expresion = expresion;
+    public void setExpression(String expression) {
+        this.expression = expression;
     }
 
-    public String getSimbolo() {
-        return simbolo;
+    public String getSymbol() {
+        return symbol;
     }
 
-    public String getValor() {
-        return valor;
+    public String getValue() {
+        return value;
     }
 
-    public void setValor(String valor) {
-        this.valor = valor;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public String getTipoDato() {
-        return tipoDato;
+    public String getDataType() {
+        return dataType;
     }
 
-    public void setTipoDato(String tipoDato) {
-        this.tipoDato = tipoDato;
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 
-    public Gramatica getTipoToken() {
-        return tipoToken;
+    public Grammar getTokenType() {
+        return tokenType;
     }
 
-    public String getAlcance() {
-        return alcance;
+    public String getScope() {
+        return scope;
     }
 
-    public void setAlcance(String alcance) {
-        this.alcance = alcance;
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 
-    public int getLinea() {
-        return linea;
+    public int getLine() {
+        return line;
     }
 
-    public void setLinea(int linea) {
-        this.linea = linea;
+    public void setLine(int line) {
+        this.line = line;
     }
 
-    public String getOperacion() {
-        return operacion;
+    public String getOperation() {
+        return operation;
     }
 
-    public void setOperacion(String operacion) {
-        this.operacion = operacion;
+    public void setOperation(String operation) {
+        this.operation = operation;
     }
 }

@@ -1,6 +1,6 @@
 package com.compiler;
 
-import com.compiler.ui.Ventana;
+import com.compiler.ui.Window;
 
 import javax.swing.SwingUtilities;
 
@@ -9,7 +9,7 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Ventana v = new Ventana();
+                Window v = new Window();
                 v.setVisible(true);
             }
         });
