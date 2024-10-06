@@ -1,25 +1,32 @@
 package com.compiler.process.analizers;
 
 import com.compiler.model.Grammar;
-import com.compiler.model.Token;
+import com.compiler.model.dto.LexicalAnalyzerResults;
+import com.compiler.model.structures.Token;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class LexicalAnalyzer {
+public class LexicalAnalyzer implements AnalyzerPipe<String, LexicalAnalyzerResults> {
     private StringBuilder input = new StringBuilder();
     private ArrayList<Token> tokens;
     private boolean isAnalysisDone = false;
-    private String errorMessage = "";
+    private List<String> errors;
     private Set<Character> emptyChars = new HashSet<>();
     private int currentLine = 1;
     private String[] codeLines;
 
-    public LexicalAnalyzer(String inputCode) {
-        codeLines = inputCode.split("\r\n|\r|\n");
+    /**
+     * Prepares the input code by splitting it into lines and
+     * removing whitespaces.
+     * @param inputCode
+     */
+    private void initialize(String inputCode) {
+        errors = new ArrayList<>();
         tokens = new ArrayList<>();
+        codeLines = inputCode.split("\r\n|\r|\n");
 
         /* TODO: I don't really remember what the characters are.
          *  I need to dig into this.
@@ -35,7 +42,8 @@ public class LexicalAnalyzer {
         ));
     }
 
-    public boolean analyze() {
+    public LexicalAnalyzerResults runAnalyzer(String inputCode) {
+        initialize(inputCode);
         for (String line : codeLines) {
             input.append(line);
             while (!isAnalysisDone)
@@ -45,7 +53,7 @@ public class LexicalAnalyzer {
             currentLine += 1;
             isAnalysisDone = false;
         }
-        return errorMessage.isEmpty();
+        return new LexicalAnalyzerResults(tokens);
     }
 
     private void analyzeCurrentLine() {
@@ -67,7 +75,7 @@ public class LexicalAnalyzer {
         isAnalysisDone = true;
 
         if (input.length() > 0) {
-            errorMessage += "Simbolo no esperado: '" + input.charAt(0) + "'" + " en la línea " + currentLine + "\n";
+            errors.add("Simbolo no esperado: '" + input.charAt(0) + "'" + " en la línea " + currentLine + "\n");
         }
     }
 
@@ -100,7 +108,7 @@ public class LexicalAnalyzer {
         return tokens;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public List<String> getErrors() {
+        return errors;
     }
 }

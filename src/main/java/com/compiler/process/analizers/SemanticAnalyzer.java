@@ -1,24 +1,33 @@
 package com.compiler.process.analizers;
 
 import com.compiler.model.Grammar;
-import com.compiler.model.Token;
+import com.compiler.model.dto.LexicalAnalyzerResults;
+import com.compiler.model.dto.SemanticAnalyzerResults;
+import com.compiler.model.structures.Token;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class SemanticAnalyzer {
+/**
+ * TODO: This should get a syntax tree and return a syntax tree
+ *  I'm first working ont getting it working as it used before, i'll take
+ *  of that next.
+ */
+public class SemanticAnalyzer implements AnalyzerPipe<LexicalAnalyzerResults, SemanticAnalyzerResults> {
     HashMap<String, Token> table = new HashMap<>();
     private ArrayList<Token> tokens;
-    private String errors;
+    private List<String> errors;
     private int index = 0;
     private int block = 0; // TODO: Likely to be scope
 
-    public SemanticAnalyzer(ArrayList<Token> tokens) {
-        this.tokens = tokens;
-        errors = "";
+    private void initialize(List<Token> tokens) {
+        this.tokens = new ArrayList<>(tokens);
+        errors = new ArrayList<>();
     }
 
-    public boolean analyze() {
+    public SemanticAnalyzerResults runAnalyzer(LexicalAnalyzerResults lexerResults) {
+        initialize(lexerResults.getTokenList());
         for (Token t : tokens) {
             if (t.getSymbol().equals("{"))
                 block++;
@@ -36,7 +45,8 @@ public class SemanticAnalyzer {
             }
             index++;
         }
-        return errors.isEmpty();
+
+        return new SemanticAnalyzerResults(table, tokens);
     }
 
     private void validateOperation(Token token) {
@@ -46,12 +56,12 @@ public class SemanticAnalyzer {
         Grammar operador = tokens.get(index + 1).getTokenType();
         if (aux.getDataType().equals("Entero")
                 && (operador != Grammar.EVALUATION_SYMBOL && operador != Grammar.ASSIGNATION)) {
-            errors += "Se usaron operadores incorrectos para la variable " + token.getSymbol() + " en la línea: "
-                    + token.getLine() + "\n";
+            errors.add("Se usaron operadores incorrectos para la variable " + token.getSymbol() + " en la línea: "
+                    + token.getLine() + "\n");
         } else if (aux.getDataType().equals("Booleano") && operador != Grammar.LOGIC_OPERATOR
                 && operador != Grammar.ASSIGNATION) {
-            errors += "Se usaron operadores incorrectos para la variable " + token.getSymbol() + " en la línea: "
-                    + token.getLine() + "\n";
+            errors.add("Se usaron operadores incorrectos para la variable " + token.getSymbol() + " en la línea: "
+                    + token.getLine() + "\n");
         }
     }
 
@@ -63,19 +73,19 @@ public class SemanticAnalyzer {
         Token aux = table.get(t.getSymbol());
         Grammar tipo = getDataType(t.getValue());
         if (aux.getDataType().equals("Entero") && tipo != Grammar.LITERAL_INTEGER) {
-            errors += "La variable " + t.getSymbol() + " es de tipo entero y recibe el valor \"" + t.getValue()
-                    + "\" en la línea: " + t.getLine() + "\n";
+            errors.add("La variable " + t.getSymbol() + " es de tipo entero y recibe el valor \"" + t.getValue()
+                    + "\" en la línea: " + t.getLine() + "\n");
         } else if (aux.getDataType().equals("Booleano") && tipo != Grammar.LITERAL_BOOLEAN) {
-            errors += "La variable " + t.getSymbol() + " es de tipo booleano y recibe el valor \"" + t.getValue()
-                    + "\" en la línea: " + t.getLine() + "\n";
+            errors.add("La variable " + t.getSymbol() + " es de tipo booleano y recibe el valor \"" + t.getValue()
+                    + "\" en la línea: " + t.getLine() + "\n");
         }
     }
 
     // TODO: Invert this
     private boolean validateStatement(Token t) {
         if (!table.containsKey(t.getSymbol())) {
-            errors += "La variable \"" + t.getSymbol() + "\" no se encuentra declarada. Fue usada en la línea: "
-                    + t.getLine() + "\n";
+            errors.add("La variable \"" + t.getSymbol() + "\" no se encuentra declarada. Fue usada en la línea: "
+                    + t.getLine() + "\n");
             return false;
         }
         return true;
@@ -86,9 +96,9 @@ public class SemanticAnalyzer {
             t.setScope("B" + block);
             table.put(t.getSymbol(), t);
         } else {
-            errors += "La variable " + t.getSymbol() + " ya se encuentra declarada en la línea "
+            errors.add("La variable " + t.getSymbol() + " ya se encuentra declarada en la línea "
                     + table.get(t.getSymbol()).getLine() + " y se declaró de nuevo en la línea " + t.getLine()
-                    + "\n";
+                    + "\n");
         }
     }
 
@@ -102,11 +112,7 @@ public class SemanticAnalyzer {
         return null;
     }
 
-    public HashMap<String, Token> getTable() {
-        return table;
-    }
-
-    public String getErrors() {
+    public List<String> getErrors() {
         return errors;
     }
 }

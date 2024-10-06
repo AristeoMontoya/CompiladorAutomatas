@@ -1,4 +1,4 @@
-package com.compiler.model;
+package com.compiler.model.structures;
 
 import java.util.ArrayList;
 import java.util.Stack;

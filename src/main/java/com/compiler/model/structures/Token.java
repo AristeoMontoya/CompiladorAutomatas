@@ -1,4 +1,6 @@
-package com.compiler.model;
+package com.compiler.model.structures;
+
+import com.compiler.model.Grammar;
 
 public class Token {
     private final String symbol;

@@ -1,7 +1,10 @@
 package com.compiler.ui;
 
-import com.compiler.process.Controller;
+import com.compiler.process.CompilerPipeline;
 
+import com.compiler.process.analizers.LexicalAnalyzer;
+import com.compiler.process.analizers.SemanticAnalyzer;
+import com.compiler.process.analizers.SyntacticAnalyzer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -47,7 +50,7 @@ public class Window extends JFrame {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
         }
-        setTitle("Compilador.");
+        setTitle("Compilador");
         setSize(800, 600);
         try {
             setIconImage(loadIcon("icono_codigo.png"));
@@ -112,10 +115,20 @@ public class Window extends JFrame {
     }
 
     private void runProcess() {
-        Controller compiler = new Controller(editorTextArea.getText());
-        if (!compiler.startProcess())
-            showCompilationResults(compiler.getErrors());
-        else {
+        String inputCode = editorTextArea.getText();
+
+        CompilerPipeline compiler = CompilerPipeline
+                .of(new LexicalAnalyzer())
+                .withNextPipe(new SyntacticAnalyzer())
+                .withNextPipe(new SemanticAnalyzer());
+
+        compiler.runPipeline(inputCode);
+
+        if (!compiler.getErrors().isEmpty()) {
+            StringBuilder builder = new StringBuilder();
+            compiler.getErrors().forEach(builder::append);
+            showCompilationResults(builder.toString());
+        } else {
             showCompilationResults("");
             fillInTable(compiler.getTable());
             showQuadruplets(compiler.getQuadruplets());

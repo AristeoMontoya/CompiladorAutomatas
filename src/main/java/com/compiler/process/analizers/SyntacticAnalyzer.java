@@ -1,11 +1,17 @@
 package com.compiler.process.analizers;
 
 import com.compiler.model.Grammar;
-import com.compiler.model.Token;
+import com.compiler.model.dto.LexicalAnalyzerResults;
+import com.compiler.model.structures.Token;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class SyntacticAnalyzer {
+/**
+ * Performs syntactical analysis on the input token list.
+ * Ideally this should return a syntax tree, I'll take care of that in the future.
+ */
+public class SyntacticAnalyzer implements AnalyzerPipe<LexicalAnalyzerResults, LexicalAnalyzerResults> {
     private ArrayList<Token> tokens;
     private Grammar token;
     private String currentLexeme;
@@ -17,12 +23,11 @@ public class SyntacticAnalyzer {
     private int expressionCount = 0;
     // TODO: Figure out what this boolean does and set a more descriptive name
     private boolean expressionFlag = false;
+    private List<String> errors;
 
-    public SyntacticAnalyzer(ArrayList<Token> tokens) {    //TODO: Rehacer todo esto. O mínimo ordenar el código. On it, past me
-        this.tokens = tokens;
-    }
-
-    public boolean analyze() {
+    public LexicalAnalyzerResults runAnalyzer(LexicalAnalyzerResults lexerResults) {
+        this.tokens = (ArrayList<Token>) lexerResults.getTokenList();
+        this.errors = new ArrayList<>();
         output = "";
         index = 0;
         try {
@@ -31,11 +36,10 @@ public class SyntacticAnalyzer {
             currentLexeme = aux.getSymbol();
             currentLine = 1;
         } catch (NullPointerException | IndexOutOfBoundsException e) {
-            output = "Código vacío.";
-            return false;
+            throw new EmptyCodeException("Código vacío");
         }
         handleClassDeclaration();
-        return output.isEmpty();
+        return new LexicalAnalyzerResults(tokens);
     }
 
     // TODO: Figure out what this method actually does
@@ -290,5 +294,9 @@ public class SyntacticAnalyzer {
 
     public ArrayList<Token> getTokens() {
         return tokens;
+    }
+
+    public List<String> getErrors() {
+        return this.errors;
     }
 }

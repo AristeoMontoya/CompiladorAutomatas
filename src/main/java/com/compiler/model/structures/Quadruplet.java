@@ -1,4 +1,4 @@
-package com.compiler.model;
+package com.compiler.model.structures;
 
 public class Quadruplet {
     String leftSideOperand;
