@@ -12,107 +12,107 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class Controller {
-    private String Codigo;
-    private String errores;
-    private ArrayList<String[]> tabla;
+    private String inputCode;
+    private String errors;
+    private ArrayList<String[]> table;
     private ArrayList<Token> tokens;
-    private String cuadruplos;
+    private String quadruplets;
 
-    public Controller(String codigo) {
-        Codigo = codigo;
-        errores = "";
-        tabla = new ArrayList<>();
+    public Controller(String inputCode) {
+        this.inputCode = inputCode;
+        errors = "";
+        table = new ArrayList<>();
     }
 
-    public boolean iniciar() {
-        lexico();
-        sintactico();        //TODO: Rehacer esto. Pero después
-        semantico();         //TODO: Hacer esto correctamente. Después también
-        codigoIntermedio();
-        return errores.isEmpty();
+    public boolean startProcess() {
+        runLexicalAnalyzer();
+        runSyntacticAnalyzer();        //TODO: Rehacer esto. Pero después
+        runSemanticAnalyzer();         //TODO: Hacer esto correctamente. Después también
+        generateIntermediateCode();
+        return errors.isEmpty();
     }
 
-    private void lexico() {
-        LexicalAnalyzer analizador = new LexicalAnalyzer(Codigo);
-        if (!analizador.analyze()) {
-            errores += analizador.getErrorMessage() + "\n";
+    private void runLexicalAnalyzer() {
+        LexicalAnalyzer lexer = new LexicalAnalyzer(inputCode);
+        if (!lexer.analyze()) {
+            errors += lexer.getErrorMessage() + "\n";
         } else {
-            tokens = analizador.getTokens();
+            tokens = lexer.getTokens();
         }
     }
 
-    private void sintactico() {
-        SyntacticAnalyzer sintactico = new SyntacticAnalyzer(tokens);
-        if (!sintactico.analyze()) {
-            errores += sintactico.getOutput() + "\n";
+    private void runSyntacticAnalyzer() {
+        SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer(tokens);
+        if (!syntacticAnalyzer.analyze()) {
+            errors += syntacticAnalyzer.getOutput() + "\n";
         } else {
-            tokens = sintactico.getTokens();
+            tokens = syntacticAnalyzer.getTokens();
         }
     }
 
-    private void semantico() {
-        SemanticAnalyzer analizador = new SemanticAnalyzer(tokens);
-        if (!analizador.analyze()) {
-            errores += analizador.getErrors();
+    private void runSemanticAnalyzer() {
+        SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(tokens);
+        if (!semanticAnalyzer.analyze()) {
+            errors += semanticAnalyzer.getErrors();
         }
-        generarTabla(analizador.getTable());
+        generateTable(semanticAnalyzer.getTable());
     }
 
-    private void codigoIntermedio() {
-        IntermediateCode intermedio = new IntermediateCode(tokens);
-        formatoCuadruplos(intermedio.getQuadruplets());
+    private void generateIntermediateCode() {
+        IntermediateCode intermediateCode = new IntermediateCode(tokens);
+        formatQuadrupletsAsString(intermediateCode.getQuadruplets());
     }
 
-    private void optimizacion() {
-        //TODO Por implementar
+    private void optimizeIntermediateCode() {
+        throw new UnsupportedOperationException("Operation not yet implemented");
     }
 
-    private void codigoObjeto() {
-        //TODO Por implementar
+    private void buildObjectCode() {
+        throw new UnsupportedOperationException("Operation not yet implemented");
     }
 
-    private void generarTabla(HashMap<String, Token> tablaAux) {
-        Collection<Token> registros = tablaAux.values();
-        for (Token t : registros) {
-            String[] registro = new String[5];
-            registro[0] = t.getSymbol();
-            registro[1] = t.getValue();
-            registro[2] = t.getDataType();
-            registro[3] = "" + t.getLine();
-            registro[4] = t.getScope();
-            tabla.add(registro);
+    private void generateTable(HashMap<String, Token> tempTable) {
+        Collection<Token> rows = tempTable.values();
+        for (Token t : rows) {
+            String[] registry = new String[5];
+            registry[0] = t.getSymbol();
+            registry[1] = t.getValue();
+            registry[2] = t.getDataType();
+            registry[3] = "" + t.getLine();
+            registry[4] = t.getScope();
+            table.add(registry);
         }
     }
 
-    public ArrayList<String[]> getTabla() {
-        return tabla;
+    public ArrayList<String[]> getTable() {
+        return table;
     }
 
-    private void formatoCuadruplos(ArrayList<Quadruplet> listaCuadruplos) {
-        String identificador = null;
-        if (listaCuadruplos.get(0).getIdentifier() != null)
-            identificador = listaCuadruplos.get(0).getIdentifier();
-        int conteo = 1;
-        if (listaCuadruplos.size() > 1)
-            cuadruplos = "Cuadruplo 1";
-        for (int i = 0; i < listaCuadruplos.size(); i++) {
-            Quadruplet cuad = listaCuadruplos.get(i);
-            if (identificador.equals(cuad.getIdentifier())) {
-                cuadruplos += "\n" + cuad.getFormat();
+    private void formatQuadrupletsAsString(ArrayList<Quadruplet> quadruplets) {
+        String identifier = null;
+        if (quadruplets.get(0).getIdentifier() != null)
+            identifier = quadruplets.get(0).getIdentifier();
+        int count = 1;
+        if (quadruplets.size() > 1)
+            this.quadruplets = "Cuadruplo 1";
+        for (int i = 0; i < quadruplets.size(); i++) {
+            Quadruplet currentQuadruplet = quadruplets.get(i);
+            if (identifier.equals(currentQuadruplet.getIdentifier())) {
+                this.quadruplets += "\n" + currentQuadruplet.getFormat();
             } else {
-                conteo++;
-                cuadruplos += "Resultado de " + listaCuadruplos.get(i - 1).getIdentifier() + " = " + listaCuadruplos.get(i - 1).getResult() + "\nCuadruplo " + conteo;
-                cuadruplos += "\n" + cuad.getFormat();
+                count++;
+                this.quadruplets += "Resultado de " + quadruplets.get(i - 1).getIdentifier() + " = " + quadruplets.get(i - 1).getResult() + "\nCuadruplo " + count;
+                this.quadruplets += "\n" + currentQuadruplet.getFormat();
             }
         }
-        cuadruplos += "\nResultado de " + listaCuadruplos.get(listaCuadruplos.size() - 1).getIdentifier() + " = " + listaCuadruplos.get(listaCuadruplos.size() - 1).getResult();
+        this.quadruplets += "\nResultado de " + quadruplets.get(quadruplets.size() - 1).getIdentifier() + " = " + quadruplets.get(quadruplets.size() - 1).getResult();
     }
 
-    public String getCuadruplos() {
-        return cuadruplos;
+    public String getQuadruplets() {
+        return quadruplets;
     }
 
-    public String getErrores() {
-        return errores;
+    public String getErrors() {
+        return errors;
     }
 }

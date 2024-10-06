@@ -113,12 +113,12 @@ public class Window extends JFrame {
 
     private void runProcess() {
         Controller compiler = new Controller(editorTextArea.getText());
-        if (!compiler.iniciar())
-            showCompilationResults(compiler.getErrores());
+        if (!compiler.startProcess())
+            showCompilationResults(compiler.getErrors());
         else {
             showCompilationResults("");
-            fillInTable(compiler.getTabla());
-            showQuadruplets(compiler.getCuadruplos());
+            fillInTable(compiler.getTable());
+            showQuadruplets(compiler.getQuadruplets());
         }
     }
 
