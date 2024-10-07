@@ -13,3 +13,9 @@ build
 *.class
 .project
 *.docx
+Compilador_Automatas.iml
+.classpath
+.idea
+.gradle
+.project
+.setting
