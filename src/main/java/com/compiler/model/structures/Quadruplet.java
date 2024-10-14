@@ -15,7 +15,7 @@ public class Quadruplet {
         this.result = result;
     }
 
-    public String getFormat() {
+    public String getFormatedOutput() {
         return String.format("| %-10s | %-10s | %-10s | %-10s |", operator, leftSideOperand, rightSideOperand, tag);
     }
 

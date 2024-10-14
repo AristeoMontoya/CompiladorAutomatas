@@ -19,10 +19,8 @@ import java.util.List;
  * @param <O> output
  */
 public class CompilerPipeline<I, O> {
-    private String inputCode;
     private List<String> errors;
     private ArrayList<String[]> table;
-    private ArrayList<Token> tokens;
     private String quadruplets;
 
     private Collection<AnalyzerPipe<?, ?>> compilationPipeline;
@@ -166,11 +164,11 @@ public class CompilerPipeline<I, O> {
         for (int i = 0; i < quadruplets.size(); i++) {
             Quadruplet currentQuadruplet = quadruplets.get(i);
             if (identifier.equals(currentQuadruplet.getIdentifier())) {
-                this.quadruplets += "\n" + currentQuadruplet.getFormat();
+                this.quadruplets += "\n" + currentQuadruplet.getFormatedOutput();
             } else {
                 count++;
                 this.quadruplets += "Resultado de " + quadruplets.get(i - 1).getIdentifier() + " = " + quadruplets.get(i - 1).getResult() + "\nCuadruplo " + count;
-                this.quadruplets += "\n" + currentQuadruplet.getFormat();
+                this.quadruplets += "\n" + currentQuadruplet.getFormatedOutput();
             }
         }
         this.quadruplets += "\nResultado de " + quadruplets.get(quadruplets.size() - 1).getIdentifier() + " = " + quadruplets.get(quadruplets.size() - 1).getResult();

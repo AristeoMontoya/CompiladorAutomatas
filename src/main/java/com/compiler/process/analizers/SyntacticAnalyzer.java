@@ -10,6 +10,9 @@ import java.util.List;
 /**
  * Performs syntactical analysis on the input token list.
  * Ideally this should return a syntax tree, I'll take care of that in the future.
+ * TODO: Looks like this is wrong, the lexer should be called
+ *  within the syntactic analyzer itself, they should be interacting
+ *  with each other.
  */
 public class SyntacticAnalyzer implements AnalyzerPipe<LexicalAnalyzerResults, LexicalAnalyzerResults> {
     private ArrayList<Token> tokens;

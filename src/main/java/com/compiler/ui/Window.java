@@ -8,6 +8,8 @@ import com.compiler.process.analizers.SyntacticAnalyzer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -42,13 +44,16 @@ public class Window extends JFrame {
     private JTable identifiersTable;
     private DefaultTableModel tableModel;
     private String header[];
-
     private boolean isIconAvailable = true;
+
+    // TODO: Is it worth replacing this with log4j for such a small project?
+    private Logger logger = Logger.getLogger(this.getClass().toString());
 
     public Window() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
+            logger.log(Level.WARNING, "Unable to load look and feel");
         }
         setTitle("Compilador");
         setSize(800, 600);
